@@ -1,35 +1,35 @@
-
 package Integracion.Proveedor;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Proveedor.TProveedor;
 
-@RunWith(value = Parameterized.class)
 public class Baja {
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		return Arrays.asList(new Object[][]{
-			{3}
-		});
+	private static String DIRECCION_TEST = "TESTPROVEEDORDAO";
+	private static String NIF_TEST = "111111111";
+	private static TProveedor TPROVEEDORTEST = new TProveedor(NIF_TEST,"987654321",DIRECCION_TEST);
+	private static int idProveedor;
+	private static DAOProveedor daoProveedor;
+	@BeforeClass
+	public static void initClass() {
+		daoProveedor = FactoriaIntegracion.obtenerInstancia().crearProveedor();
+		do{
+			idProveedor = daoProveedor.alta(TPROVEEDORTEST);
+		}
+		while(idProveedor == -4);
 	}
-	private int idCorrecto;
-	public Baja(int idCorrecto)
-	{
-		this.idCorrecto = idCorrecto;
+	@AfterClass
+	public static void destroyClass() {
+		while(Utility.bajaFisicaProveedor(idProveedor) == -4);
 	}
 	@Test
 	public void correcto() {
-		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearProveedor().baja(idCorrecto);
+		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearProveedor().baja(idProveedor);
 		assertTrue(idEsperado > 0);
 	}
-	//No hemos podido realizar un test del fallo de la baja debido a no encontrar la posibilidad de realizarlo
-
-
 }

@@ -134,6 +134,7 @@ public class DAOEspecialidadImp implements DAOEspecialidad {
 			}
 
 		} catch (SQLException e) {
+			resultado = new ArrayList<TEspecialidad>();
 			resultado.add(new TEspecialidad(-4));
 			return resultado;
 		}

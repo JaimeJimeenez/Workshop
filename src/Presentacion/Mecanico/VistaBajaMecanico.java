@@ -59,6 +59,9 @@ public class VistaBajaMecanico extends JFrame implements Vista {
 		case Eventos.RES_BAJA_MECANICO_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar el mecánico: ID no encontrado");
 			break;
+		case Eventos.RES_BAJA_MECANICO_OA:
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el mecánico: el mecánico esta trabajando en una reparación");
+			break;
 		case Eventos.EXCEPCION_SQL:
 			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
 			break;

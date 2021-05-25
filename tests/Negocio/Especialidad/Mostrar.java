@@ -2,57 +2,74 @@ package Negocio.Especialidad;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.FactoriaSA.FactoriaSA;
 
-
-@RunWith(value = Parameterized.class)
 public class Mostrar {
 	
-	private int idCorrecto;
-	private int idIncorrecto;
-	private int idNoEncontrado;
-	private SAEspecialidad saEspecialidad;
-	@Parameters
-	public static Iterable<Integer[]> getData()
-	{
-		return Arrays.asList(new Integer[][]{{1,0, 30}});
-		
+	private static final String TIPO_TEST = "TESTESPECIALIDAD";
+	private static int idEspecialidad;
+	private static SAEspecialidad saEspecialidad;
+	@BeforeClass
+	public static void initClass() {
+		saEspecialidad = FactoriaSA.obtenerInstancia().crearSAEspecialidad();
+		idEspecialidad = saEspecialidad.alta(new TEspecialidad(TIPO_TEST));
+		do
+		{
+			TEspecialidad m = FactoriaIntegracion.obtenerInstancia().crearEspecialidad().leerPorTipo(TIPO_TEST);
+			idEspecialidad = m != null ? m.getId() : -1;
+		}while(idEspecialidad == -4);
 	}
-	public Mostrar(int idCorrecto, int idIncorrecto, int idNoEncontrado)
-	{
-		this.idCorrecto = idCorrecto;
-		this.idIncorrecto = idIncorrecto;
-		this.idNoEncontrado = idNoEncontrado; 
-	}
-	@Before
-	public void init()
-	{
-		saEspecialidad = FactoriaSA.obtenerInstancia().crearSAEspecialidad();	
+
+	@AfterClass
+	public static void destroyClass() {
+		while(saEspecialidad.baja(idEspecialidad) == -4);
 	}
 	@Test
 	public void correcto()
 	{
-		TEspecialidad resultado = saEspecialidad.mostrar(idCorrecto);
-		assertTrue(resultado.getId() > 0);
+		TEspecialidad resultado = saEspecialidad.mostrar(idEspecialidad);
+		int res = resultado.getId();
+		String message = "";
+		if (res == 0)
+			message = "Datos Incorrectos";
+		else if (res == -1)
+			message = "Especialidad No Encontrado";
+		else if (res == -4)
+			message = "Fallo SQL";
+		assertTrue(message, res > 0);
 	}
 	@Test
 	public void noEncontrado()
 	{
-		TEspecialidad resultado = saEspecialidad.mostrar(idNoEncontrado);
-		assertTrue(resultado.getId() == -1);
+		saEspecialidad.baja(idEspecialidad);
+		TEspecialidad resultado = saEspecialidad.mostrar(idEspecialidad);
+		saEspecialidad.alta(new TEspecialidad(TIPO_TEST));
+		int res = resultado.getId();
+		String message = "";
+		if (res > 0)
+			message = "Datos Correctos";
+		else if (res == 0)
+			message = "Datos Incorrectos";
+		else if (res == -4)
+			message = "Fallo SQL";
+		assertTrue(message, res == -1);
 	}
 	@Test
 	public void incorrecto()
 	{
-		TEspecialidad resultado = saEspecialidad.mostrar(idIncorrecto);
-		assertTrue(resultado.getId() == 0);
+		TEspecialidad resultado = saEspecialidad.mostrar(-idEspecialidad);
+		int res = resultado.getId();
+		String message = "";
+		if (res > 0)
+			message = "Datos Correctos";
+		else if (res == -1)
+			message = "Especialidad No Encontrado";
+		else if (res == -4)
+			message = "Fallo SQL";
+		assertTrue(message, res == 0);
 	}
 }

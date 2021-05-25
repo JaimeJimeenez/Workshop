@@ -34,9 +34,11 @@ public class VistaListarEspecialidad extends JFrame implements Vista {
 			break;
 		case Eventos.EXCEPCION_SQL:
 			JOptionPane.showMessageDialog(null, "No se pudo listar las especialidades: se ha producido un fallo en la base de datos");
+			break;
 		case Eventos.RES_LISTAR_ESPECIALIDAD_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo listar las especialidades: no existe ninguna especialidad");
 			break;
+			
 		}
 	}
 	private JScrollPane crearTabla(Collection<TEspecialidad> lista) {

@@ -34,9 +34,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 			} else {
 				pstmt.setNull(6, java.sql.Types.INTEGER);
 			}
-
 			pstmt.setBoolean(7, true);
-
 			pstmt.executeUpdate();
 
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -45,6 +43,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 				id = rs.getInt(1);
 
 		} catch (SQLException exception) {
+			System.out.println(exception.getMessage());
 			return -4;
 		}
 
@@ -64,6 +63,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 
 			pstmt.executeUpdate();
 		} catch (SQLException exception) {
+			
 			return -4;
 		}
 
@@ -88,6 +88,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			return -4;
 		}
 		
@@ -112,6 +113,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 			}
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			return new TMecanico(-4);
 		}
 
@@ -164,6 +166,7 @@ public class DAOMecanicoImp implements DAOMecanico {
 			}
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			return new TMecanico(-4);
 		}
 

@@ -65,6 +65,9 @@ public class VistaMostrarProveedor extends JFrame implements Vista {
 		case Eventos.RES_MOSTRAR_PROVEEDOR_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo mostrar el proveedor: ID no encontrado");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 }

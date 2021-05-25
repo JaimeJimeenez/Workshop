@@ -67,14 +67,14 @@ public class VistaCliente extends JFrame implements Vista {
 		listar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				Controlador.obtenerInstancia().accion(Eventos.LISTAR_CLIENTE, null);
+				vistaListar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.LISTAR_CLIENTE);
 			}
 		});
 		
 		modificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				vistaListar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.MODIFICAR_CLIENTE);
+				vistaModificar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.MODIFICAR_CLIENTE);
 			}
 		});
 		
@@ -89,13 +89,30 @@ public class VistaCliente extends JFrame implements Vista {
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
+		{
 			vistaAlta.actualizar(evento, datos);
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
+		{
 			vistaBaja.actualizar(evento, datos);
+			vistaBaja = null;
+		}	
 		else if (vistaMostrar != null)
+		{
 			vistaMostrar.actualizar(evento, datos);
+			vistaMostrar = null;
+		}
 		else if (vistaModificar != null)
+		{
 			vistaModificar.actualizar(evento, datos);
+			vistaModificar = null;
+		}
+		else if (vistaListar != null)
+		{
+			vistaListar.actualizar(evento, datos);
+			vistaListar = null;
+		}
 	}
 
 }

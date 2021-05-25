@@ -22,11 +22,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			preparedStatement.setString(1, tVehiculo.getMatricula());
 			preparedStatement.setString(2, tVehiculo.getModelo());
 			preparedStatement.setBoolean(3, true);
-			if (tVehiculo.getIdCliente() != 0) {
-				preparedStatement.setInt(4, tVehiculo.getIdCliente());
-			} else {
-				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			}
+			preparedStatement.setInt(4, tVehiculo.getIdCliente());
 			
 			preparedStatement.executeUpdate();
 			ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -35,7 +31,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 				id = resultSet.getInt(1);
 			
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 		return id;
 	}
@@ -52,7 +48,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
 		return id;
@@ -63,28 +59,29 @@ public class DAOVehiculoImp implements DAOVehiculo {
 		try (Connection conection = DataBaseConnection.getConnection()) {
 			PreparedStatement preparedStatement = null;
 			
-			if (tVehiculo.getMatricula().equals("")) {
+			if (!tVehiculo.getMatricula().equals("")) {
 				preparedStatement = conection.prepareStatement("UPDATE vehiculo SET matricula = ? WHERE id_vehiculo=?");
 				preparedStatement.setString(1, tVehiculo.getMatricula());
 				preparedStatement.setInt(2, tVehiculo.getId());
+				preparedStatement.executeUpdate();
 			}
 			
 			if (!tVehiculo.getModelo().equals("")){
 				preparedStatement = conection.prepareStatement("UPDATE vehiculo SET modelo = ? WHERE id_vehiculo=?");
 				preparedStatement.setString(1, tVehiculo.getModelo());
 				preparedStatement.setInt(2, tVehiculo.getId());
+				preparedStatement.executeUpdate();
 			}
 			
 			if (tVehiculo.getIdCliente() > 0){
 				preparedStatement = conection.prepareStatement("UPDATE vehiculo SET IDCliente = ? WHERE id_vehiculo=?");
 				preparedStatement.setInt(1, tVehiculo.getIdCliente());
 				preparedStatement.setInt(2, tVehiculo.getId());
+				preparedStatement.executeUpdate();
 			}
 			
-			preparedStatement.executeUpdate();
-			
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 		
 		return tVehiculo.getId();
@@ -107,7 +104,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			}
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return new TVehiculo(-4);
 		}
 
 		return null;
@@ -134,20 +131,21 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			}
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			vehiculos = new ArrayList<TVehiculo>();
+			vehiculos.add(new TVehiculo(-4));
 		}
 
 		return vehiculos;
 	}
 
 	@Override
-	public TVehiculo leerPorMatricula(String tipo) {
+	public TVehiculo leerPorMatricula(String matricula) {
 		PreparedStatement preparedStatement = null;
 
 		try (Connection con = DataBaseConnection.getConnection()) {
-			preparedStatement = con.prepareStatement("SELECT * FROM vehiculo WHERE IDCliente=?");
+			preparedStatement = con.prepareStatement("SELECT * FROM vehiculo WHERE matricula=?");
 
-			preparedStatement.setString(1, tipo);
+			preparedStatement.setString(1, matricula);
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
@@ -156,7 +154,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			}
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return new TVehiculo(-4);
 		}
 
 		return null;
@@ -172,7 +170,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 		return id;
 	}
@@ -184,7 +182,7 @@ public class DAOVehiculoImp implements DAOVehiculo {
 		PreparedStatement preparedStatement = null;
 
 		try (Connection connection = DataBaseConnection.getConnection()) {
-			preparedStatement = connection.prepareStatement("SELECT * FROM vehiculo WHERE idCliente=?");
+			preparedStatement = connection.prepareStatement("SELECT * FROM vehiculo WHERE actividad = 1 AND idCliente=?");
 
 			preparedStatement.setInt(1, idCliente);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -199,7 +197,8 @@ public class DAOVehiculoImp implements DAOVehiculo {
 			}
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			vehiculos = new ArrayList<TVehiculo>();
+			vehiculos.add(new TVehiculo(-4));
 		}
 
 		return vehiculos;

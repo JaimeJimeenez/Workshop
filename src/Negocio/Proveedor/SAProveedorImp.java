@@ -6,7 +6,6 @@ import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Integracion.Proveedor.DAOProveedor;
 import Negocio.DataCorrect;
 import Negocio.Componente.TComponente;
-import Negocio.Mecanico.TMecanico;
 
 public class SAProveedorImp implements SAProveedor{
 
@@ -24,6 +23,8 @@ public class SAProveedorImp implements SAProveedor{
 		int resultado = -1;
 		if (leido == null)
 			return dao.alta(tProveedor);
+		if(leido.getId() == -4)
+			return -4;
 		if (!leido.isActivo())
 			return dao.reactivar(leido.getId());
 		
@@ -31,32 +32,25 @@ public class SAProveedorImp implements SAProveedor{
 	}
 	@Override
 	public int baja(int id) {
-		
 		if (id <= 0)
 			return 0;
 		
 		DAOProveedor dao = FactoriaIntegracion.obtenerInstancia().crearProveedor();
 		TProveedor leido = dao.mostrar(id);
 		Collection<TComponente> tComponente = FactoriaIntegracion.obtenerInstancia().crearComponente().mostrarComponentesProveedor(id);
-		
-		int resultado;
-		Boolean componenteActivo = false;
-		for(TComponente i: tComponente)
-			componenteActivo = componenteActivo || i.isActivo();
-		if (tComponente != null && componenteActivo)
-			resultado = -2;
-		else if(leido == null)
-			resultado = -1;
-		else if(leido.getId() == -4)
-			resultado = -4;
-		else if (!leido.isActivo())
-			resultado = -1;
-		else
-			resultado = dao.baja(id);
-		
-		return resultado;
+		if (leido == null)
+			return -1;
+		if(leido.getId() == -4)
+			return -4;
+		if(!leido.isActivo())
+			return -1;
+		if (tComponente != null && tComponente.iterator().next().getId() == -4)
+			return -4;
+		if (tComponente != null && tComponente.iterator().next().getId() > 0)
+			return -2;
+	
+		return dao.baja(id);
 	}
-
 	@Override
 	public int modificar(TProveedor tProveedor) {
 		

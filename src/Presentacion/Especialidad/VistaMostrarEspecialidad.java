@@ -63,6 +63,9 @@ public class VistaMostrarEspecialidad extends JFrame implements Vista {
 		case Eventos.RES_MOSTRAR_ESPECIALIDAD_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo mostrar la especialidad: ID no encontrado");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 }

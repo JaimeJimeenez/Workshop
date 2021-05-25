@@ -67,6 +67,9 @@ public class VistaMostrarVehiculosCliente extends JFrame implements Vista{
 		case Eventos.RES_MOSTRAR_VEHICULO_CLIENTE_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo listar los vehiculos: no existe ningun vehiculo.");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 	

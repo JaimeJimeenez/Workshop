@@ -38,6 +38,9 @@ public class VistaListarProveedor extends JFrame implements Vista {
 		case Eventos.RES_LISTAR_PROVEEDOR_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo listar los proveedores: no existe ningún proveedor");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 	
@@ -53,7 +56,10 @@ public class VistaListarProveedor extends JFrame implements Vista {
 			i++;
 		}
 		JTable tabla = new JTable(new DefaultTableModel(aux, colNames));
-		return new JScrollPane(tabla);
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(200);
+		JScrollPane p = new JScrollPane(tabla);
+		p.setPreferredSize(new Dimension(500, 300));
+		return p;
 	}
 	
 }

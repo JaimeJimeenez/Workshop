@@ -84,7 +84,7 @@ public class VistaComponente extends JFrame implements Vista {
 		listar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				Controlador.obtenerInstancia().accion(Eventos.LISTAR_COMPONENTE, null);
+				vistaListar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.LISTAR_COMPONENTE);
 			}
 		});
 
@@ -100,15 +100,35 @@ public class VistaComponente extends JFrame implements Vista {
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
+		{
 			vistaAlta.actualizar(evento, datos);
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
+		{
 			vistaBaja.actualizar(evento, datos);
+			vistaBaja = null;
+		}
 		else if (vistaMostrarXProveedor != null)
+		{
 			vistaMostrarXProveedor.actualizar(evento, datos);
+			vistaMostrarXProveedor = null;
+		}
 		else if (vistaMostrar != null)
+		{
 			vistaMostrar.actualizar(evento, datos);
+			vistaMostrar = null;
+		}	
 		else if (vistaModificar != null)
+		{
 			vistaModificar.actualizar(evento, datos);
+			vistaModificar = null;
+		}
+		else if (vistaListar != null) 
+		{
+			vistaListar.actualizar(evento, datos);
+			vistaListar = null;
+		}	
 	}
 
 }

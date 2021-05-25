@@ -75,6 +75,9 @@ public class VistaModificarEspecialidad extends JFrame implements Vista {
 		case Eventos.RES_MODIFICAR_ESPECIALIDAD_RE:
 			JOptionPane.showMessageDialog(null,"No se pudo crear la especialidad: datos repetidos");
 		break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 }

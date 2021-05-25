@@ -60,8 +60,13 @@ public class VistaBajaVehiculo extends JFrame implements Vista {
 		case Eventos.RES_BAJA_VEHICULO_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar el vehiculo: ID no encontrado");
 			break;
+		case Eventos.RES_BAJA_VEHICULO_OA:
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el vehiculo: vehiculo inactivo");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
-		
 	}
 
 }

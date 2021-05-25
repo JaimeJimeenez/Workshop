@@ -4,31 +4,54 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Cliente.SACliente;
+import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
+import Negocio.Componente.SAComponente;
+import Negocio.Componente.TComponente;
+import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Proveedor.SAProveedor;
+import Negocio.Proveedor.TProveedor;
+import Negocio.Reparacion.SAReparacion;
 import Negocio.Reparacion.TEmplea;
+import Negocio.Reparacion.TReparacion;
+import Negocio.Vehiculo.SAVehiculo;
+import Negocio.Vehiculo.TVehiculo;
 
-@RunWith(value = Parameterized.class)
 public class BajaComponente {
+	private static DAOReparacion dao;
+	private static TEmplea rep;
 	
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		return Arrays.asList(new Object[][]{
-			{new TEmplea(2, 2)}
-		});
+	public BajaComponente(){
+		rep = new TEmplea(1,1,100,100);
+		dao = FactoriaIntegracion.obtenerInstancia().crearReparacion();
 	}
-	private TEmplea idCorrecto;
-	public BajaComponente(TEmplea idCorrecto, TEmplea idIncorrecto)
+	
+	@Before
+	public void initTest()
 	{
-		this.idCorrecto = idCorrecto;
+		TEmplea res;
+		do {
+			res = dao.altaComponente(rep);
+		} while (res.getIdReparacion() == -4);
 	}
+	
 	@Test
 	public void correcto() {
-		TEmplea esperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().bajaComponente(idCorrecto);
+		TEmplea esperado; 
+		do {
+			esperado = dao.bajaComponente(new TEmplea(1, 1));
+		} while (esperado.getIdReparacion() == -4);
 		assertTrue(esperado.getIdComponente() > 0);
 	}
 	//No hemos podido realizar un test del fallo de la baja debido a no encontrar la posibilidad de realizarlo

@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -49,17 +48,18 @@ public class DAOReparacionImp implements DAOReparacion {
 		return id;
 	}
 	
-	public TReparacion leerPorDatos(TReparacion tReparacion){
+	public TReparacion leerPorDatos(TReparacion tReparacion) {
 		PreparedStatement pstmt = null;
 
 		try (Connection con = DataBaseConnection.getConnection()) {
 			pstmt = con.prepareStatement("SELECT * FROM reparacion WHERE averia=? AND fechainicio=? AND fechasalida=? AND"
-					+ " presupuesto=?");
+					+ " presupuesto=? AND id_vehiculo=?");
 
 			pstmt.setString(1, tReparacion.getAveria());
 			pstmt.setDate(2, Date.valueOf(tReparacion.getFechaInicio()));
 			pstmt.setDate(3, Date.valueOf(tReparacion.getFechaSalida()));
 			pstmt.setFloat(4, tReparacion.getPresupuesto());
+			pstmt.setInt(5, tReparacion.getIdVehiculo());
 			ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {
@@ -85,7 +85,7 @@ public class DAOReparacionImp implements DAOReparacion {
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			return -4;
 		}
 		return tReparacion.getId();
 	}
@@ -113,7 +113,7 @@ public class DAOReparacionImp implements DAOReparacion {
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
 		return idReparacion;
@@ -158,7 +158,7 @@ public class DAOReparacionImp implements DAOReparacion {
 			preparedStatement.executeUpdate();
 		} catch (SQLException exception) {
 			System.out.println(exception.getMessage());
-			return new TTrabaja(0);
+			return new TTrabaja(-4);
 		}
 
 		return tTrabaja;
@@ -198,7 +198,7 @@ public class DAOReparacionImp implements DAOReparacion {
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return new TTrabaja(-4);
 		}
 
 		return tTrabaja;
@@ -248,9 +248,11 @@ public class DAOReparacionImp implements DAOReparacion {
 		PreparedStatement preparedStatement = null;
 
 		try (Connection conection = DataBaseConnection.getConnection()) {
-			preparedStatement = conection.prepareStatement("UPDATE trabaja SET horas =?");
+			preparedStatement = conection.prepareStatement("UPDATE trabaja SET horas =? WHERE id_mecanico=? AND id_reparacion=?");
 
 			preparedStatement.setInt(1, tTrabaja.getHora());
+			preparedStatement.setInt(2, tTrabaja.getIdMecanico());
+			preparedStatement.setInt(3, tTrabaja.getIdReparacion());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException exception) {
@@ -268,7 +270,6 @@ public class DAOReparacionImp implements DAOReparacion {
 
 		try (Connection con = DataBaseConnection.getConnection()) {
 			pstmt = con.prepareStatement("SELECT * FROM reparacion WHERE id_reparacion = ?");
-
 			pstmt.setInt(1, idReparacion);
 			ResultSet rs = pstmt.executeQuery();
 
@@ -307,7 +308,10 @@ public class DAOReparacionImp implements DAOReparacion {
 				return result;
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			ArrayList<Object> res = new ArrayList<Object>();
+			TReparacion r = new TReparacion(-4);
+			res.add(r);
+			return res;
 		}
 
 		return null;
@@ -331,7 +335,8 @@ public class DAOReparacionImp implements DAOReparacion {
 				} while (resultSet.next());
 			}
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			resultado = new ArrayList<TReparacion>();
+			resultado.add(new TReparacion(-4));
 		}
 
 		return resultado;
@@ -351,17 +356,18 @@ public class DAOReparacionImp implements DAOReparacion {
 				reparaciones = new ArrayList<TReparacion>();
 				
 				do {
-					reparaciones.add(new TReparacion(resultSet.getInt("id_reparacion"), resultSet.getInt("id_vehiculo"),
+					if (resultSet.getBoolean("actividad")){
+						reparaciones.add(new TReparacion(resultSet.getInt("id_reparacion"), resultSet.getInt("id_vehiculo"),
 							resultSet.getDate("fechainicio").toString(), resultSet.getDate("fechaSalida").toString(),
 							resultSet.getString("averia"), resultSet.getFloat("presupuesto")));
-					
+					}					
 				} while (resultSet.next());
 			}
 
 		} catch (SQLException exception) {
-
+			reparaciones = new ArrayList<TReparacion>();
+			reparaciones.add(new TReparacion(-4));
 		}
-
 		return reparaciones;
 	}
 	
@@ -378,7 +384,7 @@ public class DAOReparacionImp implements DAOReparacion {
 			
 			if (rs.next()) {
 				return new TTrabaja(rs.getInt("id_reparacion"), rs.getInt("id_mecanico"),
-						rs.getInt("hora"));
+						rs.getInt("horas"));
 			}
 		} catch (SQLException exception) {
 			return new TTrabaja(-4);

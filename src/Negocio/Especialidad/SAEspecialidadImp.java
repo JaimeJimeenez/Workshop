@@ -60,6 +60,8 @@ public class SAEspecialidadImp implements SAEspecialidad {
 
 	
 	public int modificar(TEspecialidad tEspecialidad) {
+		if(tEspecialidad == null)
+			return 0;
 		if(!DataCorrect.numeroMayorCero(tEspecialidad.getId()))
 			return 0;
 		if(!DataCorrect.stringCorrecto(tEspecialidad.getTipo()))
@@ -76,6 +78,8 @@ public class SAEspecialidadImp implements SAEspecialidad {
 			resultado = -4;
 		else if(!leido.isActivo())
 			resultado = -1;
+		else if(leido.getTipo().equals(tEspecialidad.getTipo()))
+			resultado = leido.getId();
 		else if(dao.leerPorTipo(tEspecialidad.getTipo()) != null)
 			resultado = -2;
 		else
@@ -92,10 +96,14 @@ public class SAEspecialidadImp implements SAEspecialidad {
 		DAOEspecialidad dao = FactoriaIntegracion.obtenerInstancia().crearEspecialidad();
 		TEspecialidad leido = dao.mostrar(id);
 		
-		if(leido == null || !leido.isActivo())
+		if(leido == null )
 			return new TEspecialidad(-1);
-		else
-			return leido;
+		if(leido.getId() == -4)
+			return new TEspecialidad(-4);
+		if(!leido.isActivo())
+			return new TEspecialidad(-1);
+		
+		return leido;
 	}
 
 	

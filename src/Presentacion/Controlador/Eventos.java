@@ -153,7 +153,7 @@ public class Eventos {
 	public static final int RES_BAJA_COMPONENTE_OK = 465;
 	public static final int RES_BAJA_COMPONENTE_DI = 466;
 	public static final int RES_BAJA_COMPONENTE_NE = 467;
-	public static final int RES_BAJA_COMPONENTE_OA = 468;
+	public static final int RES_BAJA_COMPONENTE_EM = 1101;
 	
 	public static final int MOSTRAR_COMPONENTE = 127;
 	public static final int RES_MOSTRAR_COMPONENTE_OK = 469;
@@ -175,6 +175,7 @@ public class Eventos {
 	public static final int RES_MOSTRAR_COMPONENTE_PROVEEDOR_OK = 478;
 	public static final int RES_MOSTRAR_COMPONENTE_PROVEEDOR_DI = 479;
 	public static final int RES_MOSTRAR_COMPONENTE_PROVEEDOR_NE = 480;
+	public static final int RES_MOSTRAR_COMPONENTE_PROVEEDOR_IE = 1100;
 	
 	
 // ----------------------------------VEHICULO----------------------------------------------

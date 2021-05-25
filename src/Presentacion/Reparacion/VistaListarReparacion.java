@@ -37,6 +37,8 @@ public class VistaListarReparacion extends JFrame implements Vista{
 		case Eventos.RES_LISTAR_REPARACION_OK:
 			JOptionPane.showMessageDialog(null, crearTabla((Collection<TReparacion>) datos), "Listar Reparacion", JOptionPane.DEFAULT_OPTION);
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo listar las reparaciones: se ha producido un fallo en la base de datos");
 		case Eventos.RES_LISTAR_REPARACION_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo listar los vehiculos: no existe ningun vehiculo");
 			break;
@@ -59,8 +61,7 @@ public class VistaListarReparacion extends JFrame implements Vista{
 			i++;
 		}
 		
-		DefaultTableModel tmodel = new DefaultTableModel(aux, colNames);
-		JTable tabla = new JTable(tmodel);
+		JTable tabla = new JTable( new DefaultTableModel(aux, colNames));
 		return new JScrollPane(tabla);
 	}
 

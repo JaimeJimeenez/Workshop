@@ -54,9 +54,9 @@ public class DAOClienteImp implements DAOCliente{
 				id = rs.getInt(1);
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
-
+		
 		return id;
 	}
 
@@ -72,7 +72,7 @@ public class DAOClienteImp implements DAOCliente{
 
 			pstmt.executeUpdate();
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
 		return id;
@@ -111,17 +111,11 @@ public class DAOClienteImp implements DAOCliente{
 			pstmt.setInt(6, tCliente.getId());
 
 			pstmt.executeUpdate();
-
-			ResultSet rs = pstmt.getGeneratedKeys();
-
-			if (rs.next())
-				id = rs.getInt(1);
-
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
-		return id;
+		return tCliente.getId();
 	}
 
 	@Override
@@ -144,7 +138,7 @@ public class DAOClienteImp implements DAOCliente{
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			return new TCliente(-4);
 		}
 
 		return null;
@@ -177,7 +171,8 @@ public class DAOClienteImp implements DAOCliente{
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			resultado = new ArrayList<>();
+			resultado.add(new TCliente(-4));
 		}
 
 		return resultado;
@@ -204,7 +199,7 @@ public class DAOClienteImp implements DAOCliente{
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			return new TCliente(-4);
 		}
 
 		return null;
@@ -252,10 +247,10 @@ public class DAOClienteImp implements DAOCliente{
 				id = rs.getInt(1);
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
-		return id;
+		return tCliente.getId();
 	}
 
 }

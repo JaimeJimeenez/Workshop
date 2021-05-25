@@ -36,11 +36,7 @@ public class VistaBajaProveedor extends JFrame implements Vista {
 		aceptar.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
 				setVisible(false);
-				try {
-					Controlador.obtenerInstancia().accion(Eventos.BAJA_PROVEEDOR, tID.getText());
-				} catch (NumberFormatException nfe){
-					Controlador.obtenerInstancia().accion(Eventos.BAJA_PROVEEDOR, -1);
-				}
+				Controlador.obtenerInstancia().accion(Eventos.BAJA_PROVEEDOR, tID.getText());		
 		}
 		});
 		cancelar.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
@@ -64,7 +60,10 @@ public class VistaBajaProveedor extends JFrame implements Vista {
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar el proveedor: ID no encontrado");
 			break;
 		case Eventos.RES_BAJA_PROVEEDOR_OA:
-			JOptionPane.showMessageDialog(null, "No se pudo eliminar el proveedor: mecánicos activos");
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el proveedor: componentes activos");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
 			break;
 			
 		}

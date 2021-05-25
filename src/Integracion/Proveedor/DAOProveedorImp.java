@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Integracion.DataBaseConnection;
+import Negocio.Mecanico.TMecanico;
 import Negocio.Proveedor.TProveedor;
 
 public class DAOProveedorImp implements DAOProveedor {
@@ -59,7 +60,7 @@ public class DAOProveedorImp implements DAOProveedor {
 	public int modificar(TProveedor tProveedor) {
 		try (Connection con = DataBaseConnection.getConnection()) {
 			PreparedStatement pstmt = null;
-			pstmt = con.prepareStatement("UPDATE proveedor SET NIF = ? direccion = ?, telefono = ? WHERE id_proveedor=?");
+			pstmt = con.prepareStatement("UPDATE proveedor SET NIF = ?, direccion = ?, telefono = ? WHERE id_proveedor=?");
 			pstmt.setString(1, tProveedor.getNIF());
 			pstmt.setString(2, tProveedor.getDireccion());
 			pstmt.setString(3, tProveedor.getTelefono());
@@ -119,6 +120,7 @@ public class DAOProveedorImp implements DAOProveedor {
 			}
 
 		} catch (SQLException e) {
+			resultado = new ArrayList<TProveedor>();
 			resultado.add(new TProveedor(-4));
 		}
 

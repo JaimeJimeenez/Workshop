@@ -79,6 +79,9 @@ public class VistaModificarProveedor extends JFrame implements Vista {
 		case Eventos.RES_MODIFICAR_PROVEEDOR_RE:
 			JOptionPane.showMessageDialog(null,"No se pudo crear el proveedor: datos repetidos");
 		break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+		break;
 		}
 	}
 }

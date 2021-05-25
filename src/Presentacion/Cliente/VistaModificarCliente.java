@@ -136,6 +136,9 @@ public class VistaModificarCliente extends JFrame implements Vista {
 		case Eventos.RES_MODIFICAR_COMPONENTE_RE:
 			JOptionPane.showMessageDialog(null,"No se pudo crear el cliente: datos repetidos");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo modificar el cliente: No se pudo conectar con la base de datos");
+			break;
 		}
 	}
 	

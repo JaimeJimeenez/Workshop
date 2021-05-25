@@ -20,6 +20,7 @@ public class VistaEspecialidad extends JFrame implements Vista {
 	Vista vistaMostrar;
 	Vista vistaModificar;
 	Vista vistaListar;
+	Vista vistaTaller;
 	private static Controlador instancia;
 
 	public VistaEspecialidad() {
@@ -82,6 +83,7 @@ public class VistaEspecialidad extends JFrame implements Vista {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				FactoriaVistas.obtenerInstancia().crearVista(Eventos.TALLER);
+
 			}
 		});
 	}
@@ -89,16 +91,30 @@ public class VistaEspecialidad extends JFrame implements Vista {
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
+		{
 			vistaAlta.actualizar(evento, datos);
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
+		{
 			vistaBaja.actualizar(evento, datos);
+			vistaBaja = null;
+		}
 		else if (vistaMostrar != null)
+		{
 			vistaMostrar.actualizar(evento, datos);
+			vistaMostrar = null;
+		}
 		else if (vistaModificar != null)
+		{
 			vistaModificar.actualizar(evento, datos);
+			vistaModificar = null;
+		}
 		else if (vistaListar != null) 
+		{
 			vistaListar.actualizar(evento, datos);
-
+			vistaListar = null;
+		}
 	}
 
 }

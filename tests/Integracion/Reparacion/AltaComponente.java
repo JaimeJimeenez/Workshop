@@ -4,48 +4,57 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Cliente.SACliente;
+import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
+import Negocio.Componente.SAComponente;
+import Negocio.Componente.TComponente;
+import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Proveedor.SAProveedor;
+import Negocio.Proveedor.TProveedor;
+import Negocio.Reparacion.SAReparacion;
 import Negocio.Reparacion.TEmplea;
 import Negocio.Reparacion.TReparacion;
+import Negocio.Vehiculo.SAVehiculo;
+import Negocio.Vehiculo.TVehiculo;
 
-@RunWith(value = Parameterized.class)
+
 public class AltaComponente {
-	@Parameters
-	public static Iterable<Object[]> getData() {
-
-		return Arrays.asList(new Object[][]{
-			{	
-				new TEmplea(2, 2, 1000,100), 
-				new TEmplea(1, 1, 1000,100)
-			}
-		});
-	}
+	private static DAOReparacion dao;
+	
 	
 	public TEmplea correcto;
-	public TEmplea incorrecto;
 	
-	public AltaComponente(TEmplea correcto,
-			TEmplea incorrecto)
+	public AltaComponente()
 	{
-		this.correcto = correcto;
-		this.incorrecto = incorrecto;
-		
+		this.correcto = new TEmplea(1,1,100,100);
+		dao = FactoriaIntegracion.obtenerInstancia().crearReparacion();
 	}
+	
+	
+	@AfterClass
+	public static void destroyClass() {
+		while(dao.bajaComponente(new TEmplea(1, 1)).getIdReparacion() == -4);
+	}
+		
 	
 	@Test
 	public void correcto() {
-		TEmplea esperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaComponente(correcto);
+		TEmplea esperado;
+		do {
+			esperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaComponente(correcto);
+		} while (esperado.getIdReparacion() == -4);
 		assertTrue(esperado.getIdReparacion() > 0);
-	}
-	@Test
-	public void incorrecto() {
-		TEmplea esperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaComponente(incorrecto);
-		assertTrue(esperado.getIdReparacion() == -4);
 	}
 
 }

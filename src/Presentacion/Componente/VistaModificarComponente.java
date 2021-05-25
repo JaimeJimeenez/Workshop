@@ -19,7 +19,6 @@ import Presentacion.FactoriaVistas.FactoriaVistas;
 public class VistaModificarComponente extends JFrame implements Vista {
 	
 	public VistaModificarComponente() {
-		// Todo basado en la diapositiva 41
 		super("Modificar Componente");
 		JPanel panel = new JPanel();
 		JLabel lID = new JLabel("ID:");
@@ -60,21 +59,24 @@ public class VistaModificarComponente extends JFrame implements Vista {
 			
 		aceptar.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
 			setVisible(false);
-			try {
+			String marca = tMarca.getText();
+			String modelo = tModelo.getText();
+			TComponente tComponente;
+			try
+			{
 				int id = Integer.parseInt(tID.getText());
-				int idP = Integer.parseInt(tIdProveedor.getText());
-				String marca = tMarca.getText();
-				float precio = Float.parseFloat(tPrecio.getText());
-				String modelo = tModelo.getText();
-				int stock = Integer.parseInt(tStock.getText());
-			
-				TComponente tComponente = new TComponente(id, idP, marca, precio, modelo, stock);
-				Controlador.obtenerInstancia().accion(Eventos.MODIFICAR_COMPONENTE, tComponente);
-			} catch(NumberFormatException exception){
-				System.out.println(exception.getMessage());
+				int idP =  tIdProveedor.getText().equals("") ? 0: Integer.parseInt(tIdProveedor.getText());
+				float precio = tPrecio.getText().equals("") ? 0 :Float.parseFloat(tPrecio.getText());
+				int stock = tStock.getText().equals("") ? 0 : Integer.parseInt(tStock.getText());
+				tComponente = new TComponente(id, idP, marca, precio, modelo, stock);
 			}
-		}
-		});
+			catch(NumberFormatException exp)
+			{
+				tComponente = new TComponente(-1);
+			}
+
+			Controlador.obtenerInstancia().accion(Eventos.MODIFICAR_COMPONENTE,  tComponente);
+		}});
 		
 		cancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -97,7 +99,13 @@ public class VistaModificarComponente extends JFrame implements Vista {
 			JOptionPane.showMessageDialog(null,"No se pudo modificar el componente: ID no encontrado");
 			break;
 		case Eventos.RES_MODIFICAR_COMPONENTE_RE:
-			JOptionPane.showMessageDialog(null,"No se pudo crear el componente: datos repetidos");
+			JOptionPane.showMessageDialog(null,"No se pudo modificar el componente: datos repetidos");
+			break;
+		case Eventos.RES_MODIFICAR_COMPONENTE_IE:
+			JOptionPane.showMessageDialog(null, "No se pudo modificar el componente: ID proveedor no encontrado");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo modificar el componente: se ha producido un fallo en la base de datos");
 			break;
 		}
 	}

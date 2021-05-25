@@ -2,6 +2,8 @@ package Negocio.Reparacion;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
+
 import org.junit.Test;
 import Negocio.FactoriaSA.FactoriaSA;
 
@@ -10,6 +12,13 @@ public class Listar {
 	public void correcto()
 	{
 		SAReparacion sa = FactoriaSA.obtenerInstancia().crearSAReparacion();
-		assertTrue(sa.listar()!= null); 
+		TReparacion reparacion;
+		Collection<TReparacion> col;
+		do {
+			col = sa.listar();
+			reparacion = (TReparacion) col.toArray()[0];
+		} while (reparacion.getId() == -4);
+		
+		assertTrue(col != null); 
 	}
 }

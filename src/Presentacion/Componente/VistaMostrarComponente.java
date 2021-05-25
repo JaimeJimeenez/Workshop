@@ -60,6 +60,9 @@ public class VistaMostrarComponente extends JFrame implements Vista {
 		case Eventos.RES_MOSTRAR_COMPONENTE_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo mostrar el componente: ID no encontrado");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo mostrar el componente: se ha producido un fallo en la base de datos");
+			break;
 		}
 	}
 

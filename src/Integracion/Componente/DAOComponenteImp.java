@@ -37,8 +37,7 @@ public class DAOComponenteImp implements DAOComponente {
 				id = rs.getInt(1);
 
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
-			return 0;
+			return -4;
 		}
 
 		return id;
@@ -57,7 +56,7 @@ public class DAOComponenteImp implements DAOComponente {
 
 			pstmt.executeUpdate();
 		} catch (SQLException exception) {
-			System.out.println(exception.getMessage());
+			return -4;
 		}
 
 		return id;
@@ -78,8 +77,7 @@ public class DAOComponenteImp implements DAOComponente {
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return 0;
+			return -4;
 		}
 
 		return tComponente.getId();
@@ -100,8 +98,7 @@ public class DAOComponenteImp implements DAOComponente {
 						rs.getInt("stock"), rs.getBoolean("actividad"));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return new TComponente(0);
+			return new TComponente(-4);
 		}
 
 		return null;
@@ -114,7 +111,7 @@ public class DAOComponenteImp implements DAOComponente {
 		PreparedStatement pstmt = null;
 
 		try (Connection con = DataBaseConnection.getConnection()) {
-			pstmt = con.prepareStatement("SELECT * FROM componente WHERE id_proveedor=?");
+			pstmt = con.prepareStatement("SELECT * FROM componente WHERE id_proveedor=? AND actividad=1");
 
 			pstmt.setInt(1, id_proveedor);
 			ResultSet rs = pstmt.executeQuery();
@@ -129,7 +126,9 @@ public class DAOComponenteImp implements DAOComponente {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			resultado = new ArrayList<TComponente>();
+			resultado.add(new TComponente(-4));
+			return resultado;
 		}
 
 		return resultado;
@@ -156,7 +155,10 @@ public class DAOComponenteImp implements DAOComponente {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			resultado = new ArrayList<TComponente>();
+			resultado.add(new TComponente(-4));
+			return resultado;
+			
 		}
 
 		return resultado;
@@ -179,7 +181,7 @@ public class DAOComponenteImp implements DAOComponente {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			return new TComponente(-4);
 		}
 
 		return null;
@@ -201,8 +203,7 @@ public class DAOComponenteImp implements DAOComponente {
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return 0;
+			return -4;
 		}
 
 		return tComponente.getId();

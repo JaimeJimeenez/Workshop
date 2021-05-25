@@ -4,29 +4,55 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Cliente.SACliente;
+import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
+import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Reparacion.SAReparacion;
+import Negocio.Reparacion.TReparacion;
+import Negocio.Vehiculo.SAVehiculo;
+import Negocio.Vehiculo.TVehiculo;
 
-@RunWith(value = Parameterized.class)
 public class Baja {
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		return Arrays.asList(new Object[][]{
-			{1}
-		});
+	private static final String TESTEO = "TESTREPARACION";
+	private static DAOReparacion dao;
+	private static int idReparacion;
+	TReparacion corr;
+	public Baja(){
+		this.corr = new TReparacion(1,"2020-12-12","2021-12-12",TESTEO, 1000);
+		dao = FactoriaIntegracion.obtenerInstancia().crearReparacion();
 	}
-	private int idCorrecto;
-	public Baja(int idCorrecto)
+	
+	@Before
+	public void initTest()
 	{
-		this.idCorrecto = idCorrecto;
+		do {
+			idReparacion = dao.alta(corr);
+		} while (idReparacion == -4);
 	}
+	
+	@AfterClass
+	public static void destroyClass() {
+		while(Utility.bajaFisicaReparacion(idReparacion) == -4);
+	}
+	
+	
 	@Test
 	public void correcto() {
-		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().baja(idCorrecto);
+		int idEsperado;
+		do {
+			idEsperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().baja(idReparacion);
+		} while (idEsperado == -4);
 		assertTrue(idEsperado > 0);
 	}
 	//No hemos podido realizar un test del fallo de la baja debido a no encontrar la posibilidad de realizarlo

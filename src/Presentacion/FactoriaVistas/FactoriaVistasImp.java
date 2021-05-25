@@ -37,16 +37,36 @@ import Presentacion.Vehiculo.VistaVehiculo;
 
 public class FactoriaVistasImp extends FactoriaVistas {
 
+	private Vista vistaTaller = null;
+	private Vista vistaEspecialidad = null;
+	private Vista vistaMecanico = null;
+	private Vista vistaProveedor = null;
+	private Vista vistaComponente = null;
+	private Vista vistaCliente = null;
+	private Vista vistaVehiculo = null;
+	private Vista vistaReparacion = null;
 	@Override
 	public Vista crearVista(int tipo) {
 		Vista resultado = null;
 		switch(tipo)
 		{
 		case Eventos.TALLER: 
-			resultado = new VistaTaller();
+			if(vistaTaller == null)
+				vistaTaller = new VistaTaller();
+			else
+			{
+				((VistaTaller) vistaTaller).setVisible(true);
+			}
+			resultado = vistaTaller;
 			break;
 		case Eventos.ESPECIALIDAD:
-			resultado = new VistaEspecialidad();
+			if(vistaEspecialidad == null)
+				vistaEspecialidad = new VistaEspecialidad();
+			else
+			{
+				((VistaEspecialidad) vistaEspecialidad).setVisible(true);
+			}
+			resultado = vistaEspecialidad;
 			break;
 		case Eventos.ALTA_ESPECIALIDAD:
 			resultado = new VistaAltaEspecialidad();
@@ -58,13 +78,19 @@ public class FactoriaVistasImp extends FactoriaVistas {
 			resultado = new VistaModificarEspecialidad();
 			break;
 		case Eventos.MOSTRAR_ESPECIALIDAD:
-			resultado = new VistaMostrarEspecialidad();
+			resultado =  new VistaMostrarEspecialidad();
 			break;
 		case Eventos.LISTAR_ESPECIALIDAD:
-			resultado = new VistaListarEspecialidad();
+			resultado = new VistaListarEspecialidad();;
 			break;
 		case Eventos.PROVEEDOR:
-			resultado = new VistaProveedor();
+			if(vistaProveedor == null)
+				vistaProveedor = new VistaProveedor();
+			else
+			{
+				((VistaProveedor) vistaProveedor).setVisible(true);
+			}
+			resultado = vistaProveedor;
 			break;
 		case Eventos.ALTA_PROVEEDOR:
 			resultado = new VistaAltaProveedor();
@@ -82,7 +108,13 @@ public class FactoriaVistasImp extends FactoriaVistas {
 			resultado = new VistaListarProveedor();
 			break;
 		case Eventos.CLIENTE:
-			resultado = new VistaCliente();
+			if(vistaCliente == null)
+				vistaCliente = new VistaCliente();
+			else
+			{
+				((VistaCliente) vistaCliente).setVisible(true);
+			}
+			resultado = vistaCliente;
 			break;
 		case Eventos.ALTA_CLIENTE:
 			resultado = new VistaAltaCliente();
@@ -100,7 +132,13 @@ public class FactoriaVistasImp extends FactoriaVistas {
 			resultado = new VistaModificarCliente();
 			break;
 		case Eventos.MECANICO:
-			resultado = new VistaMecanico();
+			if(vistaMecanico == null)
+				vistaMecanico = new VistaMecanico();
+			else
+			{
+				((VistaMecanico) vistaMecanico).setVisible(true);
+			}
+			resultado = vistaMecanico;
 			break;
 		case Eventos.ALTA_MECANICO:
 			resultado = new VistaAltaMecanico();
@@ -121,7 +159,13 @@ public class FactoriaVistasImp extends FactoriaVistas {
 			resultado = new VistaMostrarMecanicosEspecialidad();
 			break;
 		case Eventos.COMPONENTE:
-			resultado = new VistaComponente();
+			if(vistaComponente == null)
+				vistaComponente = new VistaComponente();
+			else
+			{
+				((VistaComponente) vistaComponente).setVisible(true);
+			}
+			resultado = vistaComponente;
 			break;
 		case Eventos.ALTA_COMPONENTE:
 			resultado = new VistaAltaComponente();
@@ -142,7 +186,13 @@ public class FactoriaVistasImp extends FactoriaVistas {
 			resultado = new VistaListarComponente();
 			break;
 		case Eventos.VEHICULO:
-			resultado = new VistaVehiculo();
+			if(vistaVehiculo == null)
+				vistaVehiculo = new VistaVehiculo();
+			else
+			{
+				((VistaVehiculo) vistaVehiculo).setVisible(true);
+			}
+			resultado = vistaVehiculo;
 			break;
 		case Eventos.ALTA_VEHICULO:
 			resultado = new VistaAltaVehiculo();
@@ -162,8 +212,14 @@ public class FactoriaVistasImp extends FactoriaVistas {
 		case Eventos.LISTAR_VEHICULO:
 			resultado = new VistaListarVehiculo();
 			break;
-		case Eventos.REPARACION://AHORA lo quito
-			resultado = new VistaReparacion();
+		case Eventos.REPARACION:
+			if(vistaReparacion == null)
+				vistaReparacion = new VistaReparacion();
+			else
+			{
+				((VistaReparacion) vistaReparacion).setVisible(true);
+			}
+			resultado = vistaReparacion;
 			break;
 		case Eventos.ALTA_REPARACION:
 			resultado = new VistaAltaReparacion();

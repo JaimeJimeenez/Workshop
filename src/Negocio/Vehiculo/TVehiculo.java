@@ -7,7 +7,7 @@ public class TVehiculo {
 	private boolean actividad;
 	private int idCliente;
 	
-	public TVehiculo(int id, String matricula, String modelo, boolean actividad, int idCliente){
+	public TVehiculo(int id, String matricula, String modelo, boolean actividad, int idCliente) {
 		this.id = id;
 		this.matricula = matricula;
 		this.modelo = modelo;
@@ -15,23 +15,22 @@ public class TVehiculo {
 		this.idCliente = idCliente;
 	}
 	
-	public TVehiculo(int id, String matricula, String modelo, int idCliente){
+	public TVehiculo(int id, String matricula, String modelo, int idCliente) {
 		this.id = id;
 		this.matricula = matricula;
 		this.modelo = modelo;
 		this.idCliente = idCliente;
 	}
 	
-	public TVehiculo(String matricula, String modelo, int idCliente){
+	public TVehiculo(String matricula, String modelo, int idCliente) {
 		this.matricula = matricula;
 		this.modelo = modelo;
 		this.idCliente = idCliente;
 	}
 	
-	public TVehiculo(int id){
+	public TVehiculo(int id) {
 		this.id = id;
 	}
-
 
 	public TVehiculo(int idCliente, String modelo, String matricula) {
 		this.idCliente = idCliente;
@@ -78,4 +77,5 @@ public class TVehiculo {
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
 	}
+	
 }

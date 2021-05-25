@@ -5,8 +5,10 @@ import java.util.Collection;
 import Integracion.Especialidad.DAOEspecialidad;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Integracion.Mecanico.DAOMecanico;
+import Integracion.Reparacion.DAOReparacion;
 import Negocio.DataCorrect;
 import Negocio.Especialidad.TEspecialidad;
+import Negocio.Reparacion.TTrabaja;
 
 public class SAMecanicoImp implements SAMecanico {
 
@@ -33,8 +35,9 @@ public class SAMecanicoImp implements SAMecanico {
 		if(tMecanico.getIdEspecialidad() <= 0)
 			return 0;
 		
-		if (!idEspecialidadExiste(tMecanico.getIdEspecialidad()))
-			return -3;
+		int idEspecialidad = idEspecialidadExiste(tMecanico.getIdEspecialidad());
+		if (idEspecialidad < 0)
+			return idEspecialidad;
 
 		DAOMecanico dao = FactoriaIntegracion.obtenerInstancia().crearMecanico();
 		TMecanico leido = dao.leerPorNif(tMecanico.getDNI());
@@ -63,10 +66,16 @@ public class SAMecanicoImp implements SAMecanico {
 
 		int resultado;
 
-		if (leido == null || !leido.isActivo())
+		if (leido == null)
 			return -1;
 		else if(leido.getId() == -4)
 			return -4;
+		else if(!leido.isActivo())
+			return -1;
+		
+		int trabajando = trabajandoEnReparacion(leido.getId());
+		if (trabajando < 0)
+			return trabajando;
 		else
 			resultado = dao.baja(id);
 
@@ -99,19 +108,26 @@ public class SAMecanicoImp implements SAMecanico {
 		if(tMecanico.getIdEspecialidad() < 0)
 			return 0;
 		
-		if (tMecanico.getIdEspecialidad() > 0 && !idEspecialidadExiste(tMecanico.getIdEspecialidad()))
-			return -3;
+		int idEspecialidad = idEspecialidadExiste(tMecanico.getIdEspecialidad());
+		
+		if(idEspecialidad < 0)
+			return idEspecialidad;
 
 		DAOMecanico dao = FactoriaIntegracion.obtenerInstancia().crearMecanico();
 		TMecanico leido = dao.mostrar(tMecanico.getId());
-		
 		int resultado;
 
-		if (leido == null || !leido.isActivo())
+		TMecanico aux = dao.leerPorNif(tMecanico.getDNI());
+		
+		if (leido == null)
 			resultado = -1;
 		else if(leido.getId() == -4)
-			return -4;
-		else if (dao.leerPorNif(tMecanico.getDNI()) != null)
+			resultado = -4;
+		else if(!leido.isActivo())
+			resultado = -1;
+		else if (aux != null && aux.getId() == -4)
+			resultado = -4;
+		else if(aux != null && aux.getId() != tMecanico.getId())
 			resultado = -2;
 		else{
 			tMecanico.setDNI(tMecanico.getDNI().equals("") ? leido.getDNI() : tMecanico.getDNI());
@@ -134,11 +150,14 @@ public class SAMecanicoImp implements SAMecanico {
 
 		DAOMecanico dao = FactoriaIntegracion.obtenerInstancia().crearMecanico();
 		TMecanico leido = dao.mostrar(id);
-
-		if(leido != null && leido.getId() == -4)
+		
+		if (leido == null)
+			return new TMecanico(-1);
+		
+		if(leido.getId() == -4)
 			return new TMecanico(-4);
 		
-		if (leido == null || !leido.isActivo())
+		if(!leido.isActivo())
 			return new TMecanico(-1);
 
 		return leido;
@@ -155,12 +174,6 @@ public class SAMecanicoImp implements SAMecanico {
 	@Override
 	public Collection<TMecanico> mostrarMecanicosEspecialidad(int idEspecialidad) {
 		Collection<TMecanico> resultado = new ArrayList<TMecanico>();
-
-		if (!DataCorrect.numeroMayorCero(idEspecialidad)) {
-			resultado.add(new TMecanico(0));
-
-			return resultado;
-		}
 		
 		if (!DataCorrect.numeroMayorCero(idEspecialidad)) {
 			resultado.add(new TMecanico(0));
@@ -168,8 +181,9 @@ public class SAMecanicoImp implements SAMecanico {
 			return resultado;
 		}
 
-		if (!idEspecialidadExiste(idEspecialidad)) {
-			resultado.add(new TMecanico(-3));
+		idEspecialidad = idEspecialidadExiste(idEspecialidad);
+		if (idEspecialidad < 0) {
+			resultado.add(new TMecanico(idEspecialidad));
 
 			return resultado;
 		}
@@ -181,17 +195,31 @@ public class SAMecanicoImp implements SAMecanico {
 		return resultado;
 	}
 
-	private boolean idEspecialidadExiste(int idEspecialidad) {
+	private int idEspecialidadExiste(int idEspecialidad) {
 		DAOEspecialidad daoEspecialidad = FactoriaIntegracion.obtenerInstancia().crearEspecialidad();
 		TEspecialidad tEsp = daoEspecialidad.mostrar(idEspecialidad);
+		
+		if (tEsp == null)
+			return -3;
+		
+		if(tEsp.getId() == -4)
+			return -4;
+		
+		if(!tEsp.isActivo())
+			return -3;
 
-		if (tEsp == null || !tEsp.isActivo())
-			return false;
-
-		return true;
+		return tEsp.getId();
 	}
 	
-	private boolean trabajandoEnReparacion(){
-		return false;
+	private int trabajandoEnReparacion(int idMecanico){
+		DAOReparacion daoReparacion = FactoriaIntegracion.obtenerInstancia().crearReparacion();
+		TTrabaja trabaja = daoReparacion.existeMecanico(idMecanico);
+		
+		if(trabaja == null)
+			return idMecanico;
+		else if(trabaja.getIdReparacion() == -4)
+			return -4;
+		else
+			return -2;
 	}
 }

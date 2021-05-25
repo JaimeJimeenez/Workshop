@@ -1,42 +1,39 @@
 package Integracion.Especialidad;
 
 import static org.junit.Assert.*;
-import java.util.Arrays;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.Especialidad.TEspecialidad;
 
-@RunWith(value = Parameterized.class)
+
 public class Alta {
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		//TODO Requiere una mas ejemplos
-		return Arrays.asList(new Object[][]{
-			{new TEspecialidad("pintura"), new TEspecialidad("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")}
-		});
+
+	private static final String TIPO_CORRECTO = "TESTESPECIALIDADAO";
+	private static DAOEspecialidad daoEspecialidad;
+	private static int idEspecialidad;
+	@BeforeClass
+	public static void initClass() {
+		daoEspecialidad = FactoriaIntegracion.obtenerInstancia().crearEspecialidad();
 	}
-	public TEspecialidad tEspecialidadCorrecto;
-	public TEspecialidad tEspecialidadIncorrecto;
-	public Alta(TEspecialidad tEspecialidadCorrecto,TEspecialidad tEspecialidadIncorrecto)
+	@AfterClass
+	public static void destroyClass() {
+		while(Utility.bajaFisicaEspecialidad(idEspecialidad) == -4);
+	}
+	@Test
+	public void testCorrecto()
 	{
-		this.tEspecialidadCorrecto = tEspecialidadCorrecto;
-		this.tEspecialidadIncorrecto = tEspecialidadIncorrecto;
+		idEspecialidad = daoEspecialidad.alta(new TEspecialidad(TIPO_CORRECTO));
+		String message = "Fallo";
+		if(idEspecialidad == -4)
+			message = "Fallo SQL";
+		
+		assertTrue(message, idEspecialidad > 0);
 		
 	}
-	@Test
-	public void correcto() {
-		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearEspecialidad().alta(tEspecialidadCorrecto);
-		assertTrue(idEsperado > 0);
-	}
-	@Test
-	public void incorrecto() {
-		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearEspecialidad().alta(tEspecialidadIncorrecto);
-		assertTrue(idEsperado == -4);
-	}
+	
 
 }

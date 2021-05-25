@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Presentacion.Vista;
-import Presentacion.Controlador.Controlador;
 import Presentacion.Controlador.Eventos;
 import Presentacion.FactoriaVistas.FactoriaVistas;
 
@@ -98,17 +97,35 @@ public class VistaMecanico extends JFrame implements Vista{
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
+		{
 			vistaAlta.actualizar(evento, datos);
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
-			vistaBaja.actualizar(evento, datos);
+		{
+			vistaBaja.actualizar(evento, datos);	
+			vistaBaja = null;
+		}
 		else if (vistaMostrar != null)
-			vistaMostrar.actualizar(evento, datos);
+		{
+			vistaMostrar.actualizar(evento, datos);		
+			vistaMostrar = null;
+		}
 		else if (vistaModificar != null)
-			vistaModificar.actualizar(evento, datos);
+		{
+			vistaModificar.actualizar(evento, datos);		
+			vistaModificar = null;
+		}
 		else if (vistaListar != null)
-			vistaListar.actualizar(evento, datos);
+		{
+			vistaListar.actualizar(evento, datos);	
+			vistaListar = null;
+		}
 		else if (vistaMostrarMecanicosEspecialidad != null)
-			vistaMostrarMecanicosEspecialidad.actualizar(evento, datos);
+		{
+			vistaMostrarMecanicosEspecialidad.actualizar(evento, datos);	
+			vistaMostrarMecanicosEspecialidad = null;
+		}
 	}
 
 }

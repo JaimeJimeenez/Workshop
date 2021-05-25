@@ -2,55 +2,53 @@ package Negocio.Proveedor;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.FactoriaSA.FactoriaSA;
 
-@RunWith(value = Parameterized.class)
 public class Mostrar {
-	
-	private int idCorrecto;
-	private int idIncorrecto;
-	private int idNoEncontrado;
-	private SAProveedor saProveedor;
-	@Parameters
-	public static Iterable<Integer[]> getData()
-	{
-		return Arrays.asList(new Integer[][]{{1, 0 , 50}});
+	private static String DIRECCION_TEST = "TESTPROVEEDOR";
+	private static String NIF_TEST = "222222222";
+	private static TProveedor TPROVEEDORTEST = new TProveedor(NIF_TEST,"913456743",DIRECCION_TEST);
+	private static SAProveedor saProveedor;
+	private static int idProveedor;
+	@BeforeClass
+	public static void initClass() {
+		saProveedor = FactoriaSA.obtenerInstancia().crearSAProveedor();
+		idProveedor = saProveedor.alta(TPROVEEDORTEST);
+		do
+		{	
+			TProveedor m = FactoriaIntegracion.obtenerInstancia().crearProveedor().leerPorNIF(NIF_TEST);
+			idProveedor = m != null ? m.getId() : -1;
+
+		}while(idProveedor == -4);
 		
 	}
-	public Mostrar(int idCorrecto, int idIncorrecto, int idNoEncontrado)
-	{
-		this.idCorrecto = idCorrecto;
-		this.idIncorrecto = idIncorrecto;
-		this.idNoEncontrado = idNoEncontrado; 
-	}
-	@Before
-	public void init()
-	{
-		saProveedor = FactoriaSA.obtenerInstancia().crearSAProveedor();	
+	@AfterClass
+	public static void destroyClass() {
+		while(saProveedor.baja(idProveedor) == -4);
 	}
 	@Test
 	public void correcto()
 	{
-		TProveedor resultado = saProveedor.mostrar(idCorrecto);
+		TProveedor resultado = saProveedor.mostrar(idProveedor);
+		
 		assertTrue(resultado.getId() > 0);
 	}
 	@Test
 	public void noEncontrado()
 	{
-		TProveedor resultado = saProveedor.mostrar(idNoEncontrado);
+		saProveedor.baja(idProveedor);
+		TProveedor resultado = saProveedor.mostrar(idProveedor);
+		saProveedor.alta(TPROVEEDORTEST);
 		assertTrue(resultado.getId() == -1);
 	}
 	@Test
 	public void incorrecto()
 	{
-		TProveedor resultado = saProveedor.mostrar(idIncorrecto);
+		TProveedor resultado = saProveedor.mostrar(-idProveedor);
 		assertTrue(resultado.getId() == 0);
 	}
 

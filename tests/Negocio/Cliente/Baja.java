@@ -2,54 +2,84 @@ package Negocio.Cliente;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Vehiculo.SAVehiculo;
+import Negocio.Vehiculo.TVehiculo;
 
-@RunWith(value = Parameterized.class)
 public class Baja {
 	
-	@Parameters
-	public static Iterable<Integer[]> getData() {
-		return Arrays.asList(new Integer[][]{
-			{4, 0, 100 }
-		});
-	}
+	private static String CLIENTE_TEST = "TESTCLIENTE";
+	private static String DNI_TEST = "06708032J";
+	private static int idCliente;
+	private static int idVehiculo;
 	
-	private int idCorrecto;
-	private int idIncorreto;
-	private int idNoEncontrado;
+	private static TCliente tCliente;
+	private static SACliente saCliente;
+	private static SAVehiculo saVehiculo;
 	
-	private SACliente saCliente;
-	
-	public Baja(int idCorrecto, int idIncorrecto, int idNoEncontrado) {
-		
+	@BeforeClass
+	public static void initClass() {
+		saCliente = FactoriaSA.obtenerInstancia().crearSACliente();
+		saVehiculo = FactoriaSA.obtenerInstancia().crearSAVehiculo();
+		tCliente = new TParticular("Pepe", "924214451", DNI_TEST, "addidas.com/es");
+		do {
+			idCliente = saCliente.alta(tCliente);
+			if (idCliente == -1) {
+				TCliente c = FactoriaIntegracion.obtenerInstancia().crearCliente().leerPorNif(tCliente.getNif());
+				idCliente = c != null ? c.getId() : -1;
+			}
+		} while (idCliente == -4);
+		tCliente.setId(idCliente);
 	}
 	
 	@Before
-	public void init() { saCliente = FactoriaSA.obtenerInstancia().crearSACliente(); }
+	public void initTest() {
+		while (saCliente.alta(tCliente) == -4);
+	}
 	
+	@Test
 	public void testCorrecto() {
-		int resultado = saCliente.baja(idCorrecto);
+		int resultado = saCliente.baja(idCliente);
 		assertTrue(resultado > 0);
 	}
 	
 	@Test
 	public void testDatosIncorrectos() {
-		int resultado = saCliente.baja(idIncorreto);
+		int resultado = saCliente.baja(-idCliente);
 		assertTrue(resultado == 0);
 	}
 	
 	@Test
 	public void testDatosNoEncontrados() {
-		int resultado = saCliente.baja(idNoEncontrado);
+		while (saCliente.baja(idCliente) == -4);
+		int resultado = saCliente.baja(idCliente);
 		assertTrue(resultado == -1);
 	}
 	
+	@Test
+	public void testVehiculoActivo() {
+		do {
+			TVehiculo TVEHICULOTEST = new TVehiculo("1234AEX", "Porsche", idCliente);
+			idVehiculo = saVehiculo.alta(TVEHICULOTEST);
+			
+			if (idVehiculo == -1) {
+				TVehiculo v = FactoriaIntegracion.obtenerInstancia().crearVehiculo().leerPorMatricula(TVEHICULOTEST.getMatricula());
+				idVehiculo = v.getId();
+			}
+		} while (idVehiculo == -4);
+		int resultado = saCliente.baja(idCliente);
+		while (saVehiculo.baja(idVehiculo) == -4);
+		assertTrue(resultado == -2);
+	}
+	
+	@AfterClass
+	public static void destroyClass() {
+		while (saVehiculo.baja(idVehiculo) == -4);
+		while (saCliente.baja(idCliente) == -4);
+	}
 }

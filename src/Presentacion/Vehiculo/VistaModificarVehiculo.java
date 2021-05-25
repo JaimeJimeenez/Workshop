@@ -80,16 +80,22 @@ public class VistaModificarVehiculo extends JFrame implements Vista{
 		switch(evento) {
 		case Eventos.RES_MODIFICAR_VEHICULO_OK:
 			Integer id= (Integer) datos;
-			JOptionPane.showMessageDialog(null,"Vehiculo modificado con ID: " + id.intValue());
+			JOptionPane.showMessageDialog(null, "Vehiculo modificado con ID: " + id.intValue());
 			break;
 		case Eventos.RES_MODIFICAR_VEHICULO_DI:
-			JOptionPane.showMessageDialog(null,"No se pudo modificar el vehiculo: datos incorrectos");
+			JOptionPane.showMessageDialog(null, "No se pudo modificar el vehiculo: datos incorrectos");
 			break;
 		case Eventos.RES_MODIFICAR_VEHICULO_NE:
 			JOptionPane.showMessageDialog(null,"No se pudo modificar el vehiculo: ID no encontrado");
 			break;
 		case Eventos.RES_MODIFICAR_VEHICULO_RE:
-			JOptionPane.showMessageDialog(null,"No se pudo crear el vehiculo: datos repetidos");
+			JOptionPane.showMessageDialog(null,"No se pudo modificar el vehiculo: datos repetidos");
+			break;
+		case Eventos.RES_MODIFICAR_VEHICULO_IE:
+			JOptionPane.showMessageDialog(null, "No se pudo modificar el vehiculo: cliente no encontrado");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
 			break;
 		}
 		

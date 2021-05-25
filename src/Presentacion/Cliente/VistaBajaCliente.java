@@ -48,7 +48,6 @@ public class VistaBajaCliente extends JFrame implements Vista{
 		});
 	}
 	
-	
 	@Override
 	public void actualizar(int evento, Object datos) {
 		switch (evento) {
@@ -64,6 +63,9 @@ public class VistaBajaCliente extends JFrame implements Vista{
 			break;
 		case Eventos.RES_BAJA_CLIENTE_OA:
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar el cliente: mecánicos activos");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el cliente: No se pudo conectar con la base de datos");
 			break;
 		}
 		

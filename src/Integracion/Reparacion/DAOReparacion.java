@@ -34,4 +34,8 @@ public interface DAOReparacion {
 	public Collection<TReparacion> mostrarReparacionesVehiculo(int idVehiculo);
 
 	public TReparacion leerPorDatos(TReparacion tReparacion);
+	
+	public TTrabaja existeMecanico(int idMecanico);
+	
+	public TEmplea existeComponente(int idComponente);
 }

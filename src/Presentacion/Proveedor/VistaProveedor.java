@@ -87,16 +87,30 @@ public class VistaProveedor extends JFrame implements Vista {
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
+		{
 			vistaAlta.actualizar(evento, datos);
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
+		{
 			vistaBaja.actualizar(evento, datos);
+			vistaBaja = null;
+		}	
 		else if (vistaMostrar != null)
-			vistaMostrar.actualizar(evento, datos);
+		{
+			vistaMostrar.actualizar(evento, datos);	
+			vistaMostrar = null;
+		}
 		else if (vistaModificar != null)
+		{
 			vistaModificar.actualizar(evento, datos);
+			vistaModificar = null;
+		}
 		else if (vistaListar != null)
-			vistaListar.actualizar(evento, datos);
-		
+		{
+			vistaListar.actualizar(evento, datos);	
+			vistaListar = null;
+		}
 	}
 
 }

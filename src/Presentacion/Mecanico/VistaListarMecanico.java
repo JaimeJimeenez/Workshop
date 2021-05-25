@@ -1,5 +1,6 @@
 package Presentacion.Mecanico;
 
+import java.awt.Dimension;
 import java.util.Collection;
 
 import javax.swing.JFrame;
@@ -56,7 +57,10 @@ public class VistaListarMecanico extends JFrame implements Vista {
 			i++;
 		}
 		JTable tabla = new JTable(new DefaultTableModel(aux, colNames));
-		return new JScrollPane(tabla);
+		tabla.getColumnModel().getColumn(5).setPreferredWidth(175);
+		JScrollPane p = new JScrollPane(tabla);
+		p.setPreferredSize(new Dimension(750, 300));
+		return p;
 	}
 
 }

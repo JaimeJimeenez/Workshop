@@ -4,43 +4,54 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Cliente.SACliente;
+import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
+import Negocio.Especialidad.SAEspecialidad;
+import Negocio.Especialidad.TEspecialidad;
+import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Mecanico.SAMecanico;
+import Negocio.Mecanico.TMecanico;
+import Negocio.Reparacion.SAReparacion;
+import Negocio.Reparacion.TEmplea;
+import Negocio.Reparacion.TReparacion;
 import Negocio.Reparacion.TTrabaja;
+import Negocio.Vehiculo.SAVehiculo;
+import Negocio.Vehiculo.TVehiculo;
 
-@RunWith(value = Parameterized.class)
+
 public class AltaMecanico {
-
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		return Arrays.asList(new Object[][] {
-			{new TTrabaja(1, 2, 10), 
-				new TTrabaja(2, 3, 1000)}
-		});
-	}
+	private static DAOReparacion dao;
 	
 	public TTrabaja correcto;
-	public TTrabaja horasIncorrectas;
 	
-	public AltaMecanico(TTrabaja correcto, TTrabaja horasIncorrectas) {
-		this.correcto = correcto;
-		this.horasIncorrectas = horasIncorrectas;
+	public AltaMecanico() {
+		this.correcto = new TTrabaja(1,1,100);
+		dao = FactoriaIntegracion.obtenerInstancia().crearReparacion();
+	}
+	
+	@AfterClass
+	public static void destroyClass() {
+		while(dao.bajaMecanico(new TTrabaja(1,1)).getIdReparacion() == -4);
 	}
 	
 	@Test
 	public void correcto() {
-		TTrabaja idEsperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaMecanico(correcto);
+		TTrabaja idEsperado; 
+		do {
+			idEsperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaMecanico(correcto);
+		} while (idEsperado.getIdReparacion() == -4);
 		assertTrue(idEsperado.getIdReparacion() > 0);
-	}
-	
-	@Test
-	public void horasIncorrectas() {
-		TTrabaja idEsperado = FactoriaIntegracion.obtenerInstancia().crearReparacion().altaMecanico(horasIncorrectas);
-		assertTrue(idEsperado.getIdReparacion() == -4);
 	}
 	
 }

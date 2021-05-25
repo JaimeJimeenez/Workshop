@@ -77,6 +77,9 @@ public class VistaAltaVehiculo extends JFrame implements Vista{
 		case Eventos.RES_ALTA_VEHICULO_CNE:
 			JOptionPane.showMessageDialog(null, "No se pudo crear el vehiculo: cliente no encontrado");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 		
 	}

@@ -24,6 +24,7 @@ public class Mostrar {
 	public static Iterable<Integer[]> getData() {
 		return Arrays.asList(new Integer[][]{{5, 0 , 50}});
 	}
+	
 	public Mostrar(int idCorrecto, int idIncorrecto, int idNoEncontrado) {
 		this.idCorrecto = idCorrecto;
 		this.idIncorrecto = idIncorrecto;

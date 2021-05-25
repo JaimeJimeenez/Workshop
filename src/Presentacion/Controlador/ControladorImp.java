@@ -20,10 +20,7 @@ import Negocio.Reparacion.TTrabaja;
 import Negocio.Vehiculo.SAVehiculo;
 import Negocio.Vehiculo.TVehiculo;
 import Presentacion.Vista;
-import Presentacion.Cliente.VistaListarCliente;
-import Presentacion.Componente.VistaListarComponente;
 import Presentacion.Taller.VistaTaller;
-import Presentacion.Vehiculo.VistaListarVehiculo;
 
 public class ControladorImp extends Controlador {
 	private SAEspecialidad saEspecialidad;
@@ -34,10 +31,6 @@ public class ControladorImp extends Controlador {
 	private SAVehiculo saVehiculo;
 	private SAReparacion saReparacion;
 	private Vista vista;
-
-	private VistaListarCliente vistaCliente;
-	private VistaListarComponente vistaComponente;
-	private VistaListarVehiculo vistaVehiculo;
 
 	public ControladorImp() {
 		saEspecialidad = FactoriaSA.obtenerInstancia().crearSAEspecialidad();
@@ -59,7 +52,6 @@ public class ControladorImp extends Controlador {
 		TCliente tCliente = null;
 		TComponente tComponente = null;
 		TVehiculo tVehiculo = null;
-		TReparacion tReparacion = null;
 		TEmplea tEmplea = null;
 		TTrabaja tTrabaja = null;
 		Collection<TEspecialidad> listaEspecialidad = null;
@@ -69,8 +61,6 @@ public class ControladorImp extends Controlador {
 		Collection<TComponente> listaComponente = null;
 		Collection<TVehiculo> listaVehiculo = null;
 		Collection<TReparacion> listaReparacion = null;
-		Collection<TEmplea> listaEmplea = null;
-		Collection<TTrabaja> listaTrabaja = null;
 		Collection<TReparacion> tReparaciones = null;
 
 		switch (evento) {
@@ -272,11 +262,14 @@ public class ControladorImp extends Controlador {
 
 		case Eventos.LISTAR_CLIENTE:
 			listaCliente = saCliente.listar();
-			vistaCliente = new VistaListarCliente();
-
-			if (listaCliente != null)
-				vistaCliente.actualizar(Eventos.RES_LISTAR_CLIENTE_OK, listaCliente);
-			else
+			if (listaCliente != null) {
+				res = ((TCliente) listaCliente.toArray()[0]).getId();
+				if (res > 0)
+					vista.actualizar(Eventos.RES_LISTAR_CLIENTE_OK, listaCliente);
+				else 
+					vista.actualizar(Eventos.EXCEPCION_SQL, null);
+			}
+			else 
 				vista.actualizar(Eventos.RES_LISTAR_CLIENTE_NE, null);
 			break;
 
@@ -457,7 +450,7 @@ public class ControladorImp extends Controlador {
 			else if (res == -1)
 				vista.actualizar(Eventos.RES_BAJA_COMPONENTE_NE, null);
 			else if (res == -2)
-				vista.actualizar(Eventos.RES_BAJA_MECANICO_OA, null);
+				vista.actualizar(Eventos.RES_BAJA_COMPONENTE_EM, datos);
 			else if (res == -4)
 				vista.actualizar(Eventos.EXCEPCION_SQL, null);
 			break;
@@ -485,19 +478,29 @@ public class ControladorImp extends Controlador {
 			int idProveedor = Integer.parseInt((String) datos);
 			listaComponente = saComponente.mostrarComponentesProveedor(idProveedor);
 
-			if (listaComponente != null)
-				vista.actualizar(Eventos.RES_MOSTRAR_COMPONENTE_PROVEEDOR_OK, listaComponente);
-			else
+			if (listaComponente != null) {
+				res = ((TComponente) listaComponente.toArray()[0]).getId();
+				if (res > 0)
+					vista.actualizar(Eventos.RES_MOSTRAR_COMPONENTE_PROVEEDOR_OK, listaComponente);
+				else if(res == 0)
+					vista.actualizar(Eventos.RES_MOSTRAR_COMPONENTE_DI, null);
+				else if(res == -3)
+					vista.actualizar(Eventos.RES_MOSTRAR_COMPONENTE_PROVEEDOR_IE, null);
+				else if(res == -4)
+					vista.actualizar(Eventos.EXCEPCION_SQL, null);
+			} else
 				vista.actualizar(Eventos.RES_MOSTRAR_COMPONENTE_PROVEEDOR_NE, null);
 			break;
 
 		case Eventos.LISTAR_COMPONENTE:
 			listaComponente = saComponente.listar();
-			vistaComponente = new VistaListarComponente();
-
-			if (listaComponente != null)
-				vistaComponente.actualizar(Eventos.RES_LISTAR_COMPONENTE_OK, listaComponente);
-			else
+			if (listaComponente != null) {
+				res = ((TComponente) listaComponente.toArray()[0]).getId();
+				if (res > 0)
+					vista.actualizar(Eventos.RES_LISTAR_COMPONENTE_OK, listaComponente);
+				else
+					vista.actualizar(Eventos.EXCEPCION_SQL, null);
+			} else
 				vista.actualizar(Eventos.RES_LISTAR_COMPONENTE_NE, null);
 			break;
 
@@ -531,8 +534,6 @@ public class ControladorImp extends Controlador {
 				vista.actualizar(Eventos.RES_ALTA_VEHICULO_RE, null);
 			else if (res == -2)
 				vista.actualizar(Eventos.RES_ALTA_VEHICULO_CNE, null);
-			else if (res == -3)
-				vista.actualizar(Eventos.RES_ALTA_VEHICULO_IE, null);
 			else if (res == -4)
 				vista.actualizar(Eventos.EXCEPCION_SQL, null);
 			break;
@@ -588,27 +589,27 @@ public class ControladorImp extends Controlador {
 
 		case Eventos.LISTAR_VEHICULO:
 			listaVehiculo = saVehiculo.listar();
-			vistaVehiculo = new VistaListarVehiculo();
-
-			if (listaVehiculo != null)
-				vistaVehiculo.actualizar(Eventos.RES_LISTAR_VEHICULO_OK, listaVehiculo);
+			if (listaVehiculo != null && !listaVehiculo.isEmpty() && listaVehiculo.iterator().next().getId() == -4)
+				vista.actualizar(Eventos.EXCEPCION_SQL, null);
+			else if (listaVehiculo != null)
+				vista.actualizar(Eventos.RES_LISTAR_VEHICULO_OK, listaVehiculo);
 			else
 				vista.actualizar(Eventos.RES_LISTAR_VEHICULO_NE, null);
 			break;
-
+			
 		case Eventos.MODIFICAR_VEHICULO:
 			res = saVehiculo.modificar((TVehiculo) datos);
-
+			
 			if (res > 0)
 				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_OK, new Integer(res));
 			else if (res == 0)
 				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_DI, null);
 			else if (res == -1)
 				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_NE, null);
-			else if (res == -2)
-				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_RE, null);
 			else if (res == -3)
 				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_IE, null);
+			else if (res == -2)
+				vista.actualizar(Eventos.RES_MODIFICAR_VEHICULO_RE, null);
 			else if (res == -4)
 				vista.actualizar(Eventos.EXCEPCION_SQL, null);
 			break;
@@ -617,9 +618,18 @@ public class ControladorImp extends Controlador {
 		// REPARACION
 
 		case Eventos.ALTA_REPARACION:
-			res = saReparacion.alta((TReparacion) datos, listaEmplea, listaTrabaja);
+			Collection<Object> d = (Collection<Object>) datos;
+			TReparacion r = (TReparacion) d.toArray()[0];
+			Collection<TEmplea> e = (Collection<TEmplea>) d.toArray()[1];
+			Collection<TTrabaja> t = (Collection<TTrabaja>) d.toArray()[2];
+			if (r.getId() != -1){
+				res = saReparacion.alta(r,e,t);
+			}else {
+				res = 0;
+			}
+			
 			if (res > 0)
-				vista.actualizar(Eventos.RES_ALTA_REPARACION_OK, tEmplea);
+				vista.actualizar(Eventos.RES_ALTA_REPARACION_OK, new Integer(res));
 			else if (res == 0)
 				vista.actualizar(Eventos.RES_ALTA_REPARACION_DI, null);
 			else if (res == -1)
@@ -706,13 +716,13 @@ public class ControladorImp extends Controlador {
 			}
 			if (tTrabaja.getIdReparacion() > 0)
 				vista.actualizar(Eventos.RES_BORRAR_MECANICO_REPARACION_OK, tEmplea);
-			else if (tEmplea.getIdReparacion() == 0)
+			else if (tTrabaja.getIdReparacion() == 0)
 				vista.actualizar(Eventos.RES_BORRAR_MECANICO_REPARACION_DI, null);
-			else if (tEmplea.getIdReparacion() == -1)
+			else if (tTrabaja.getIdReparacion() == -1)
 				vista.actualizar(Eventos.RES_BORRAR_MECANICO_REPARACION_NM, null);
-			else if (tEmplea.getIdReparacion() == -2)
+			else if (tTrabaja.getIdReparacion() == -2)
 				vista.actualizar(Eventos.RES_BORRAR_MECANICO_REPARACION_NR, null);
-			else if (tEmplea.getIdReparacion() == -4)
+			else if (tTrabaja.getIdReparacion() == -4)
 				vista.actualizar(Eventos.EXCEPCION_SQL, null);
 			break;
 
@@ -735,8 +745,15 @@ public class ControladorImp extends Controlador {
 			break;
 
 		case Eventos.ANYADIR_COMPONENTE_REPARACION:
-			tEmplea = saReparacion.anyadirComponente((TEmplea) datos);
-			res = tEmplea.getIdReparacion();
+			
+			try {
+				tEmplea = saReparacion.anyadirComponente((TEmplea) datos);
+				res = tEmplea.getIdReparacion();
+			} catch (Exception ex){
+				res = 0;
+			}
+			
+			
 			if (res > 0)
 				vista.actualizar(Eventos.RES_ANYADIR_COMPONENTE_REPARACION_OK, tEmplea);
 			else if (res == 0)
@@ -752,8 +769,13 @@ public class ControladorImp extends Controlador {
 			break;
 
 		case Eventos.ANYADIR_MECANICO_REPARACION:
-			tTrabaja = saReparacion.anyadirMecanicoReparacion((TTrabaja) datos);
-			res = tTrabaja.getIdReparacion();
+			try {
+				tTrabaja = saReparacion.anyadirMecanicoReparacion((TTrabaja) datos);
+				res = tTrabaja.getIdReparacion();
+			} catch (Exception ex){
+				res = 0;
+			}
+			
 			if (res > 0)
 				vista.actualizar(Eventos.RES_ANYADIR_MECANICO_REPARACION_OK, tTrabaja);
 			else if (res == 0)
@@ -769,8 +791,13 @@ public class ControladorImp extends Controlador {
 			break;
 
 		case Eventos.MODIFICAR_MECANICO_REPARACION:
-			tTrabaja = saReparacion.modificarMecanicoReparacion((TTrabaja) datos);
-			res = tTrabaja.getIdReparacion();
+			try {
+				tTrabaja = saReparacion.modificarMecanicoReparacion((TTrabaja) datos);
+				res = tTrabaja.getIdReparacion();
+			} catch (Exception ex){
+				res = 0;
+			}
+			
 			if (res > 0)
 				vista.actualizar(Eventos.RES_MODIFICAR_MECANICO_REPARACION_OK, tTrabaja);
 			else if (res == 0)
@@ -784,8 +811,13 @@ public class ControladorImp extends Controlador {
 			break;
 
 		case Eventos.MODIFICAR_COMPONENTE_REPARACION:
-			tEmplea = saReparacion.modificarComponenteReparacion((TEmplea) datos);
-			res = tEmplea.getIdReparacion();
+			try {
+				tEmplea = saReparacion.modificarComponenteReparacion((TEmplea) datos);
+				res = tEmplea.getIdReparacion();
+			} catch (Exception ex){
+				res = 0;
+			}
+			
 			if (res > 0)
 				vista.actualizar(Eventos.RES_MODIFICAR_COMPONENTE_REPARACION_OK, tEmplea);
 			else if (res == 0)
@@ -802,13 +834,14 @@ public class ControladorImp extends Controlador {
 
 		case Eventos.LISTAR_REPARACION:
 			listaReparacion = saReparacion.listar();
-
+			if (listaReparacion != null && !listaReparacion.isEmpty() 
+					&& listaReparacion.iterator().next().getId() == -4)
+				vista.actualizar(Eventos.EXCEPCION_SQL, null);
 			if (listaReparacion != null)
 				vista.actualizar(Eventos.RES_LISTAR_REPARACION_OK, listaReparacion);
 			else
 				vista.actualizar(Eventos.RES_LISTAR_REPARACION_NE, null);
 			break;
 		}
-
 	}
 }

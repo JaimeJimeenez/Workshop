@@ -73,6 +73,9 @@ public class VistaMostrarCliente extends JFrame implements Vista{
 		case Eventos.RES_MOSTRAR_CLIENTE_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo mostrar el cliente: ID no encontrado");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo mostrar el cliente: No se pudo conectar con la base de datos");
+			break;
 		}
 		
 	}

@@ -1,32 +1,42 @@
 package Integracion.Cliente;
 
-import java.util.Arrays;
 import static org.junit.Assert.*;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 
-@RunWith(value = Parameterized.class)
+import Integracion.Utility;
+import Integracion.FactoriaIntegracion.FactoriaIntegracion;
+import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
+
 public class Baja {
 	
-	@Parameters
-	public static Iterable<Object[]> getData() {
-		return Arrays.asList(new Object[][]{
-			{3}
-		});
-	}
+	private static final String MODULO = "cliente";
+	private static String DIRECCION_TEST = "TESTCLIENTEDAO";
+	private static String DNI_TEST = "95946823T";
+	private static TCliente TCLIENTETEST = new TParticular("TESTCLIENTE", "987654321", DNI_TEST, DIRECCION_TEST);
+	private static int idCliente;
+	private static DAOCliente daoCliente;
 	
-	private int idCorrecto;
-	public Baja(int idCorrecto) {
-		this.idCorrecto = idCorrecto;
+	@BeforeClass
+	public static void initClass() {
+		daoCliente = FactoriaIntegracion.obtenerInstancia().crearCliente();
+		do {
+			idCliente = daoCliente.alta(TCLIENTETEST);
+		} while (idCliente == -4);
 	}
 	
 	@Test
 	public void correcto() {
-		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearCliente().baja(idCorrecto);
+		int idEsperado = FactoriaIntegracion.obtenerInstancia().crearCliente().baja(idCliente);
 		assertTrue(idEsperado > 0);
 	}
+	
+	@AfterClass
+	public static void destroyClass() {
+		while (Utility.bajaFisicaCliente(idCliente) == -4);
+	}
+	
 }

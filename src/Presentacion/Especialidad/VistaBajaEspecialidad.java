@@ -63,6 +63,9 @@ public class VistaBajaEspecialidad extends JFrame implements Vista {
 		case Eventos.RES_BAJA_ESPECIALIDAD_OA:
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar la especialidad: mecánicos activos");
 			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "Se ha producido un error con la conexión a la base de datos.");
+			break;
 		}
 	}
 }

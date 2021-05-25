@@ -12,6 +12,25 @@ public class DataCorrect {
 
 		return true;
 	}
+	
+	public static boolean fechaCorrecta(String fecha){
+		if (fecha.length() != 10)
+			return false;
+		
+		for (int i = 0; i < 4; i++) {
+			if (!Character.isDigit(fecha.charAt(i)))
+				return false;
+		}
+		for (int i = 5; i < 7; i++) {
+			if (!Character.isDigit(fecha.charAt(i)))
+				return false;
+		}
+		for (int i = 8; i < fecha.length(); i++) {
+			if (!Character.isDigit(fecha.charAt(i)))
+				return false;
+		}
+		return true;
+	}
 
 	public static boolean stringSoloDigitosCorrecto(String cadena) {
 		if (cadena.length() == 0)
@@ -59,6 +78,21 @@ public class DataCorrect {
 		return true;
 	}
 
+	public static boolean matriculaCorrecta(String matricula) {
+		if (matricula.length() != 7)
+			return false;
+		
+		for (int i = 0; i < 4; i++) 
+			if (!Character.isDigit(matricula.charAt(i)))
+				return false;
+		
+		for (int i = 4; i < matricula.length(); i++)
+			if (!Character.isLetter(matricula.charAt(i)))
+				return false;
+		
+		return true;
+	}
+	
 	public static boolean numeroMayorCero(int numero) {
 		return numero > 0;
 	}

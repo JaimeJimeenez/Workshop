@@ -151,30 +151,66 @@ public class VistaReparacion extends JFrame implements Vista {
 	@Override
 	public void actualizar(int evento, Object datos) {
 		if (vistaAlta != null)
-			vistaAlta.actualizar(evento, datos);
+		{
+			vistaAlta.actualizar(evento, datos);	
+			vistaAlta = null;
+		}
 		else if (vistaBaja != null)
+		{
 			vistaBaja.actualizar(evento, datos);
+			vistaBaja = null;
+		}
 		else if (vistaMostrar != null)
-			vistaMostrar.actualizar(evento, datos);
+		{
+			vistaMostrar.actualizar(evento, datos);	
+			vistaMostrar = null;
+		}
 		else if (vistaModificar != null)
-			vistaModificar.actualizar(evento, datos);
+		{
+			vistaModificar.actualizar(evento, datos);	
+			vistaModificar = null;
+		}
 		else if (vistaAnyadirComponente != null)
+		{
 			vistaAnyadirComponente.actualizar(evento, datos);
-		else if (vistaAnyadirMecanico != null)//
-			vistaAnyadirMecanico.actualizar(evento, datos);
+			vistaAnyadirComponente = null;
+		}
+		else if (vistaAnyadirMecanico != null)
+		{
+			vistaAnyadirMecanico.actualizar(evento, datos);		
+			vistaAnyadirMecanico = null;
+		}
 		else if (vistaBorrarComponente != null)
-			vistaBorrarComponente.actualizar(evento, datos);
-		else if (vistaBorrarMecanico != null)
-			vistaBorrarMecanico.actualizar(evento, datos);
-		else if (vistaModificarComponente != null)
-			vistaModificarComponente.actualizar(evento, datos);
-		else if (vistaModificarMecanico != null)
-			vistaModificarMecanico.actualizar(evento, datos);
-		else if (vistaMostrarReparacionVehiculo != null)
-			vistaMostrarReparacionVehiculo.actualizar(evento, datos);
-		else if (vistaListar != null)
-			vistaListar.actualizar(evento, datos);
+		{
+			vistaBorrarComponente.actualizar(evento, datos);	
+			vistaBorrarComponente = null;
+		}
 		
+		else if (vistaBorrarMecanico != null)
+		{
+			vistaBorrarMecanico.actualizar(evento, datos);
+			vistaBorrarMecanico = null;
+		}
+		else if (vistaModificarComponente != null)
+		{
+			vistaModificarComponente.actualizar(evento, datos);
+			vistaModificarComponente = null;
+		}
+		else if (vistaModificarMecanico != null)
+		{
+			vistaModificarMecanico.actualizar(evento, datos);
+			vistaModificarMecanico = null;
+		}
+		else if (vistaMostrarReparacionVehiculo != null)
+		{
+			vistaMostrarReparacionVehiculo.actualizar(evento, datos);
+			vistaMostrarReparacionVehiculo = null;
+		}
+		else if (vistaListar != null)
+		{
+			vistaListar.actualizar(evento, datos);
+			vistaListar = null;	
+		}
 	}
 
 }

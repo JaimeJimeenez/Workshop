@@ -77,15 +77,14 @@ public class VistaVehiculo extends JFrame implements Vista{
 		listar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				Controlador.obtenerInstancia().accion(Eventos.LISTAR_VEHICULO, null);
+				vistaListar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.LISTAR_VEHICULO);
 			}
-			
 		});
 		
 		modificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				vistaListar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.MODIFICAR_VEHICULO);
+				vistaModificar = FactoriaVistas.obtenerInstancia().crearVista(Eventos.MODIFICAR_VEHICULO);
 			}
 		});
 		
@@ -109,6 +108,8 @@ public class VistaVehiculo extends JFrame implements Vista{
 			vistaMostrar.actualizar(evento, datos);
 		else if (vistaModificar != null)
 			vistaModificar.actualizar(evento, datos);
+		else if (vistaListar != null) 
+			vistaListar.actualizar(evento, datos);
 	}
 
 }

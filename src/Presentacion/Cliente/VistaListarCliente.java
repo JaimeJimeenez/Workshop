@@ -5,27 +5,37 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Negocio.Cliente.TCliente;
 import Negocio.Cliente.TEmpresa;
 import Negocio.Cliente.TParticular;
 import Presentacion.Vista;
+import Presentacion.Controlador.Controlador;
 import Presentacion.Controlador.Eventos;
-import Presentacion.FactoriaVistas.FactoriaVistas;
 
 public class VistaListarCliente extends JFrame implements Vista {
-		
+	
+	public VistaListarCliente() {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				Controlador.obtenerInstancia().accion(Eventos.LISTAR_CLIENTE, null);
+			}
+		});
+	}
 	@Override
 	public void actualizar(int evento, Object datos) {
 		switch (evento) {
 		case Eventos.RES_LISTAR_CLIENTE_OK:
-			Collection<TCliente> lista = (Collection<TCliente>) datos;
-			crearTabla(lista, datos);
-			FactoriaVistas.obtenerInstancia().crearVista(Eventos.TALLER);
+			JOptionPane.showMessageDialog(null, crearTabla((Collection<TCliente>)datos), "Listar Cliente", 
+					JOptionPane.DEFAULT_OPTION);
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo listar las especialidades: se ha producido un fallo en la base de datos");
 			break;
 		case Eventos.RES_LISTAR_CLIENTE_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo listar los clientes: no existe ningun cliente");
@@ -33,44 +43,34 @@ public class VistaListarCliente extends JFrame implements Vista {
 		}
 	}
 	
-	private void crearTabla(Collection<TCliente> lista, Object datos) {
+	private JScrollPane crearTabla(Collection<TCliente> lista) {
 		String[] colNames = {"ID", "Tipo", "DNI / NIF","Nombre","Direccion / Web","Telefono"};
 		int i = 0;
-		JPanel panel = new JPanel();
-		this.setContentPane(panel);
-		JTable tabla = new JTable();
-		String[][] aux = new String[lista.size()][colNames.length];		
-		for(TCliente cliente : lista) {
-			int j = 0;
-			aux[i][j] = Integer.toString(cliente.getId()); j++;
-			if(cliente instanceof TParticular) aux[i][j] = "Particular"; 
-			else aux[i][j] = "Empresa";
-			j++;
-			aux[i][j] = cliente.getNif(); j++;
-			aux[i][j] = cliente.getNombre(); j++;
-			if(cliente instanceof TParticular) aux[i][j] = ((TParticular) cliente).getDireccion(); 
-			else ((TEmpresa) cliente).getPaginaWeb(); 
-			j++;
-			aux[i][j] = cliente.getTelefono();
+		String[][] aux = new String[lista.size()][colNames.length];
+		for (TCliente cliente : lista) {
+			
+			aux[i][0] = Integer.toString(cliente.getId());
+			if (cliente instanceof TEmpresa) {
+				aux[i][1] = "E";
+				TEmpresa t = (TEmpresa) cliente;
+				aux[i][4] = t.getPaginaWeb();
+			}
+			else {
+				aux[i][1] = "P";
+				TParticular p = (TParticular) cliente;
+				aux[i][4] = p.getDireccion();
+			}
+			aux[i][2] = cliente.getNif();
+			aux[i][3] = cliente.getNombre();
+			aux[i][5] = cliente.getTelefono();
 			i++;
 		}
-		DefaultTableModel tmodel = new DefaultTableModel(aux, colNames) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public boolean isCellEditable(int row, int col) {
-				return false;
-			}
-		};
-		tabla.setModel(tmodel);	
-		tabla.getColumnModel().getColumn(4).setPreferredWidth(250);
-		tabla.getColumnModel().getColumn(5).setPreferredWidth(75);
+		JTable tabla = new JTable(new DefaultTableModel(aux, colNames));
+		tabla.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tabla.getColumnModel().getColumn(4).setPreferredWidth(175);
 		JScrollPane p = new JScrollPane(tabla);
-		add(p);
-		panel.add(p);
-		p.setPreferredSize(new Dimension(800, 300));		
-		pack();
-		this.setLocationRelativeTo(null);
-		JOptionPane.showMessageDialog(null, p, "Listar Clientes", JOptionPane.DEFAULT_OPTION);
+		p.setPreferredSize(new Dimension(750, 300));
+		return p;
 	}
 	
 }

@@ -3,38 +3,46 @@ package Integracion.Cliente;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Integracion.Utility;
 import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.Cliente.TCliente;
+import Negocio.Cliente.TParticular;
 
-@RunWith(value = Parameterized.class)
 public class Modificar {
 
-	@Parameters
-	public static Iterable<TCliente[]> getData() {
-		return Arrays.asList(new TCliente[][] {{
-			//TODO
-		}});
+	private static String DIRECCION_TEST = "TESTCLIENTEDAO";
+	private static String DNI_TEST = "95946823T";
+	private static TCliente TCLIENTETEST = new TParticular("TESTCLIENTE", "987654321", DNI_TEST, DIRECCION_TEST);
+	private static int idCliente;
+	private static DAOCliente daoCliente;
+	
+	@BeforeClass
+	public static void initClass() {
+		daoCliente = FactoriaIntegracion.obtenerInstancia().crearCliente();
+		
+		do {
+			idCliente = daoCliente.alta(TCLIENTETEST);
+		} while (idCliente == -4);
+		TCLIENTETEST.setId(idCliente);
 	}
-	
-	private TCliente tClienteCorrecto;
-	private DAOCliente daoCliente;
-	
-	public Modificar(TCliente tClienteCorrecto) {
-		this.tClienteCorrecto = tClienteCorrecto;
-	}
-	
-	@Before
-	public void init() { daoCliente = FactoriaIntegracion.obtenerInstancia().crearCliente(); }
 	
 	@Test
 	public void correcto() {
-		int resultado = daoCliente.modificar(tClienteCorrecto);
+		int resultado = daoCliente.modificar(TCLIENTETEST);
 		assertTrue(resultado > 0);
+	}
+	
+	@AfterClass
+	public static void destroyClass() {
+		while (Utility.bajaFisicaCliente(idCliente) == -4);
 	}
 }

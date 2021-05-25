@@ -2,67 +2,124 @@ package Negocio.Especialidad;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import Integracion.FactoriaIntegracion.FactoriaIntegracion;
 import Negocio.Especialidad.SAEspecialidad;
 import Negocio.FactoriaSA.FactoriaSA;
+import Negocio.Mecanico.SAMecanico;
+import Negocio.Mecanico.TMecanico;
 
-@RunWith(value = Parameterized.class)
 public class Baja {
-	
-	@Parameters
-	public static Iterable<Integer[]>getData()
-	{		
-		return Arrays.asList(new Integer[][]
-				{{2, 0, 2147483647, 1}, 
-				});
-	}
-	private int idCorrecto;
-	private int idIncorrecto;
-	private int idNoEncontrado;
-	private int idMecanicoActivo;
-	private SAEspecialidad saEspecialidad;
-	public Baja(int idCorrecto, int idIncorrecto, int idNoEncontrado, int idMecanicoActivo)
+	private static final String TIPO_TEST = "TESTESPECIALIDAD";
+	private static final String DNI_TEST = "77088913C";
+	private static final TEspecialidad TESPECIALIDADTEST =  new TEspecialidad(TIPO_TEST);
+	private static int idEspecialidad, idMecanico;
+	private TEspecialidad tEspecialidad;
+	private static SAEspecialidad saEspecialidad;
+	private static SAMecanico saMecanico;
+	public Baja()
 	{
-		this.idCorrecto = idCorrecto;
-		this.idIncorrecto = idIncorrecto;
-		this.idNoEncontrado = idNoEncontrado;
-		this.idMecanicoActivo = idMecanicoActivo;
+		tEspecialidad = TESPECIALIDADTEST;
+	}
+	@BeforeClass
+	public static void initClass() {
+		saMecanico = FactoriaSA.obtenerInstancia().crearSAMecanico();
+		saEspecialidad = FactoriaSA.obtenerInstancia().crearSAEspecialidad();
+		do{
+			idEspecialidad = saEspecialidad.alta(TESPECIALIDADTEST);
+			
+			if(idEspecialidad == -1)
+			{
+				TEspecialidad m = FactoriaIntegracion.obtenerInstancia().crearEspecialidad().leerPorTipo(TESPECIALIDADTEST.getTipo());
+
+				idEspecialidad = m.getId();
+			}
+			
+		}
+		while(idEspecialidad == -4);
 	}
 	@Before
-	public void init()
-	{
-		saEspecialidad = FactoriaSA.obtenerInstancia().crearSAEspecialidad();	
+	public void initTest() {
+		while(saEspecialidad.alta(tEspecialidad) == -4);
+	}
+	@AfterClass
+	public static void destroyClass() {
+		while(saMecanico.baja(idMecanico) == -4);
+		while(saEspecialidad.baja(idEspecialidad) == -4);
 	}
 	@Test
 	public void testCorrecto()
 	{
-		int resultado = saEspecialidad.baja(idCorrecto);
-		assertTrue(resultado > 0);
-	}
+
+		int resultado = saEspecialidad.baja(idEspecialidad);
+		String message = "";
+		if (resultado == 0)
+			message = "Dato Incorrecto";
+		else if (resultado == -1)
+			message = "Especialidad No Encontrado";
+		else if (resultado == -2)
+			message = "Mecanico Actio";
+		else if (resultado == -4)
+			message = "Fallo SQL";
+		
+		assertTrue(message, resultado > 0);
+	}	
 	@Test
 	public void testDatosIncorrectos()
 	{
-		int resultado = saEspecialidad.baja(idIncorrecto);
-		assertTrue(resultado == 0);
+		int resultado = saEspecialidad.baja(-idEspecialidad);
+		String message = "";
+		if (resultado > 0)
+			message = "Dato correcto";
+		else if (resultado == -1)
+			message = "Especialidad No Encontrado";
+		else if (resultado == -2)
+			message = "Mecanico Actio";
+		else if (resultado == -4)
+			message = "Fallo SQL";
+		assertTrue(message, resultado == 0);
 	}
 	@Test
 	public void testDatosNoEncontrado()
 	{
-		int resultado = saEspecialidad.baja(idNoEncontrado);
-		System.out.println(resultado);
-		assertTrue(resultado == -1);
+		while(saEspecialidad.baja(idEspecialidad) == -4);
+		int resultado = saEspecialidad.baja(idEspecialidad);
+		String message = "";
+		if (resultado > 0)
+			message = "Dato correcto";
+		else if (resultado == -2)
+			message = "Mecanico Actio";
+		else if (resultado == -4)
+			message = "Fallo SQL";
+		assertTrue(message, resultado == -1);
 	}
 	@Test
 	public void testMecanicoActivo()
 	{
-		int resultado = saEspecialidad.baja(idMecanicoActivo);
-		assertTrue(resultado == -2);
+		do
+		{
+			idMecanico = saMecanico.alta( new TMecanico(DNI_TEST, 1500, "TESTESPECIALIDAD", idEspecialidad, "916633123", "525426183012345678901234"));
+			if(idMecanico == -1)
+			{
+				TMecanico m = FactoriaIntegracion.obtenerInstancia().crearMecanico().leerPorNif(DNI_TEST);
+				idMecanico = m.getId();
+			}
+		}while(idMecanico < 0);
+		int resultado = saEspecialidad.baja(idEspecialidad);
+		String message = "";
+		if (resultado > 0)
+			message = "Dato correcto";
+		else if (resultado == 0)
+			message = "Dato Incorrecto";
+		else if (resultado == -1)
+			message = "Especialidad No Encontrado";
+		else if (resultado == -4)
+			message = "Fallo SQL";
+		while(saMecanico.baja(idMecanico) == -4);
+		assertTrue(message, resultado == -2);
+		
 	}
 }

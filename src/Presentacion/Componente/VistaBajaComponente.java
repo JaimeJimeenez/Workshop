@@ -60,6 +60,12 @@ public class VistaBajaComponente extends JFrame implements Vista{
 		case Eventos.RES_BAJA_COMPONENTE_NE:
 			JOptionPane.showMessageDialog(null, "No se pudo eliminar el componente: ID no encontrado");
 			break;
+		case Eventos.RES_BAJA_COMPONENTE_EM:
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el componente: componente empleado en una reparación");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo eliminar el componente: se ha producido un fallo en la base de datos");
+			break;
 		}
 }
 

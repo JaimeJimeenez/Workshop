@@ -87,6 +87,12 @@ public class VistaAltaComponente extends JFrame implements Vista{
 		case Eventos.RES_ALTA_COMPONENTE_RE:
 			JOptionPane.showMessageDialog(null, "No se pudo crear el componente: datos repetidos");
 			break;
+		case Eventos.RES_ALTA_COMPONENTE_IE:
+			JOptionPane.showMessageDialog(null, "No se pudo crear el componente: ID proveedor no encontrado");
+			break;
+		case Eventos.EXCEPCION_SQL:
+			JOptionPane.showMessageDialog(null, "No se pudo crear el componente: se ha producido un fallo en la base de datos");
+			break;
 		}
 	}
 
